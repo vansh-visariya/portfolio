@@ -78,6 +78,13 @@ body {
   animation: gradient-shift 3s ease infinite;
 }
 
+/* Section overlays ensure readability over 3D background */
+.section-overlay-dark {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.5));
+}
+
 @keyframes gradient-shift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }

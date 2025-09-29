@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Navigation from '@/components/Navigation';
 import Scene3D from '@/components/Scene3D';
 import ServicesSection from '@/components/ServicesSection';
@@ -11,6 +11,20 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
+  const [now, setNow] = useState<string>("");
+
+  useEffect(() => {
+    const formatTime = () => {
+      const d = new Date();
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mm = String(d.getMinutes()).padStart(2, '0');
+      const ss = String(d.getSeconds()).padStart(2, '0');
+      return `${hh}:${mm}:${ss}`;
+    };
+    setNow(formatTime());
+    const t = setInterval(() => setNow(formatTime()), 1000);
+    return () => clearInterval(t);
+  }, []);
 
   return (
     <>
@@ -22,13 +36,89 @@ export default function Home() {
 
       <div className="bg-black text-white overflow-x-hidden">
         <CursorEffect />
+        {/* Top info bar */}
+        <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between py-3 text-xs tracking-wider uppercase text-white/70">
+              <div className="pointer-events-auto flex items-center gap-3">
+                <span className="opacity-70">New York City</span>
+                <span className="opacity-40">/</span>
+                <span className="opacity-70">72° Sunny</span>
+              </div>
+              <div className="pointer-events-auto flex items-center gap-3">
+                <span className="opacity-70">{now}</span>
+                <span className="opacity-40">/</span>
+                <a href="mailto:hey@mantis.works" className="hover:text-white transition-colors">Let's chat</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <Navigation />
 
       {/* Hero Section with 3D Model */}
-      <section id="home" className="relative h-screen">
-        {/* Background gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900/50 to-black z-0" />
-        <Scene3D />
+      {/* Render the 3D background once; sections stack over it */}
+      <Scene3D />
+      <section id="home" className="relative min-h-[90vh] flex items-end pb-24">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
+        <div className="relative z-10 mx-auto max-w-7xl px-6">
+          <motion.h1
+            className="text-6xl md:text-8xl font-bold tracking-tight mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            WUKONG
+          </motion.h1>
+          <motion.p
+            className="text-xl md:text-2xl text-white/80 max-w-3xl"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+          >
+            AI/ML Developer — crafting immersive digital experiences.
+          </motion.p>
+        </div>
+      </section>
+
+      {/* Tagline Sections inspired by Mantis */}
+      <section className="relative px-6 py-32">
+        <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px]" />
+        <div className="max-w-7xl mx-auto">
+          <motion.h2
+            className="text-[10vw] leading-[0.9] md:text-8xl font-bold tracking-tight"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            we create feelings.
+          </motion.h2>
+        </div>
+      </section>
+
+      <section className="relative px-6 pb-16">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/40" />
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-start">
+          <motion.h3
+            className="text-5xl md:text-7xl font-semibold"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            viewport={{ once: true }}
+          >
+            Great design doesn’t just guide behavior.
+          </motion.h3>
+          <motion.h3
+            className="text-5xl md:text-7xl font-semibold text-white/80"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            It speaks directly to the nervous system.
+          </motion.h3>
+        </div>
       </section>
 
       {/* About Section */}
@@ -121,7 +211,7 @@ export default function Home() {
       {/* Work Section */}
       <WorkSection />
 
-      {/* Contact Section */}
+      {/* Contact Section (CTA) */}
       <section id="contact" className="py-32 px-6 bg-gradient-to-br from-black via-gray-900/50 to-black">
         <motion.div
           className="max-w-5xl mx-auto text-center"
@@ -131,13 +221,13 @@ export default function Home() {
           viewport={{ once: true }}
         >
           <motion.h2
-            className="text-5xl md:text-7xl font-bold mb-10 gradient-text"
+            className="text-5xl md:text-7xl font-bold mb-10"
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            Let's Build Something Amazing
+            Let’s build your next experiential project together.
           </motion.h2>
           <motion.p
             className="text-xl md:text-2xl text-gray-300 mb-16 max-w-4xl mx-auto leading-relaxed"
@@ -146,7 +236,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
           >
-            Ready to bring AI innovation to your project? Let's discuss how we can create intelligent solutions together.
+            Small teams, big ideas. Streamlined by AI, crafted with love. Tell me about your brief and timeline—I'll propose an approach and assemble the right crew.
           </motion.p>
           <motion.div
             className="flex flex-col sm:flex-row gap-8 justify-center"
@@ -156,18 +246,16 @@ export default function Home() {
             viewport={{ once: true }}
           >
             <motion.a
-              href="https://github.com/vansh-visariya"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-gradient-to-r from-green-400 to-blue-500 text-black px-10 py-5 rounded-lg font-bold text-lg hover:from-green-300 hover:to-blue-400 transition-all duration-300 hover:scale-105 hover:shadow-2xl glow-effect"
+              href="mailto:hey@mantis.works"
+              className="bg-white text-black px-10 py-5 rounded-lg font-bold text-lg hover:bg-gray-200 transition-all duration-300 hover:scale-105 hover:shadow-2xl"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              View My Work
+              Email Me
             </motion.a>
             <motion.a
               href="#about"
-              className="border-2 border-green-400 text-green-400 px-10 py-5 rounded-lg font-bold text-lg hover:bg-green-400 hover:text-black transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+              className="border-2 border-white text-white px-10 py-5 rounded-lg font-bold text-lg hover:bg-white hover:text-black transition-all duration-300 hover:scale-105 hover:shadow-2xl"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >

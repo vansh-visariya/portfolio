@@ -335,9 +335,9 @@ const Scene3D = () => {
   }, []);
 
   return (
-    <div className="w-full h-screen relative overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black" />
+    <div className="fixed inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
+      {/* Subtle vignette to improve text readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/50" />
 
       <Canvas
         camera={{ position: [0, 0, 12], fov: 50 }}
@@ -366,11 +366,11 @@ const Scene3D = () => {
           <Environment preset="night" />
 
           {/* Fog for depth */}
-          <fog attach="fog" args={['#000000', 8, 25]} />
+          <fog attach="fog" args={['#000000', 6, 22]} />
 
           {/* 3D Objects */}
           <NeuralNetworkStructure scrollProgress={scrollProgress} />
-          <ParticleSystem count={150} />
+          <ParticleSystem count={220} />
 
           {/* Controls - disabled for better performance */}
           <OrbitControls
@@ -382,7 +382,7 @@ const Scene3D = () => {
         </Suspense>
       </Canvas>
 
-      {/* Overlay content */}
+      {/* Overlay content (center title) */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -439,7 +439,7 @@ const Scene3D = () => {
       </motion.div>
 
       {/* Progress indicator */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-black/20 z-50">
+      <div className="absolute top-0 left-0 w-full h-1 bg-black/20 z-10">
         <motion.div
           className="h-full bg-gradient-to-r from-green-400 to-blue-400"
           style={{ width: `${scrollProgress * 100}%` }}
