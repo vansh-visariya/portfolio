@@ -66,50 +66,84 @@ function NeuralConnection({ start, end, opacity = 0.3 }: {
 // Advanced Neural Network Structure
 function NeuralNetworkStructure({ scrollProgress }: { scrollProgress: number }) {
   const groupRef = useRef<THREE.Group>(null);
-  const [nodes, setNodes] = useState<Array<[number, number, number]>>([]);
-  const [connections, setConnections] = useState<Array<{ start: [number, number, number], end: [number, number, number] }>>([]);
+  const coreRef = useRef<THREE.Group>(null);
+  const [nodes, setNodes] = useState<Array<{ position: [number, number, number], layer: number, id: number }>>([]);
+  const [connections, setConnections] = useState<Array<{ start: [number, number, number], end: [number, number, number], strength: number }>>([]);
 
   useEffect(() => {
-    // Generate neural network structure
-    const newNodes: Array<[number, number, number]> = [];
-    const newConnections: Array<{ start: [number, number, number], end: [number, number, number] }> = [];
+    // Generate more sophisticated neural network structure
+    const newNodes: Array<{ position: [number, number, number], layer: number, id: number }> = [];
+    const newConnections: Array<{ start: [number, number, number], end: [number, number, number], strength: number }> = [];
 
-    // Create layers of nodes
-    const layers = 5;
-    const nodesPerLayer = [8, 12, 16, 12, 8];
+    // Create multiple interconnected layers with varying densities
+    const layers = 7;
+    const nodesPerLayer = [6, 10, 16, 20, 16, 10, 6];
+    const layerRadii = [1.5, 2.2, 3.0, 3.5, 3.0, 2.2, 1.5];
+
+    let nodeId = 0;
 
     for (let layer = 0; layer < layers; layer++) {
       const layerNodes = nodesPerLayer[layer];
-      const radius = 2 + layer * 0.5;
-      const yOffset = (layer - 2) * 1.5;
+      const radius = layerRadii[layer];
+      const yOffset = (layer - 3) * 1.8; // Center around y=0
 
       for (let node = 0; node < layerNodes; node++) {
         const angle = (node / layerNodes) * Math.PI * 2;
-        const x = Math.cos(angle) * radius;
-        const z = Math.sin(angle) * radius;
-        const y = yOffset + (Math.random() - 0.5) * 0.5;
+        const spiralOffset = layer * 0.3; // Add spiral effect
+        const x = Math.cos(angle + spiralOffset) * radius;
+        const z = Math.sin(angle + spiralOffset) * radius;
+        const y = yOffset + Math.sin(angle * 3) * 0.3; // Add wave pattern
 
-        newNodes.push([x, y, z]);
+        newNodes.push({ position: [x, y, z], layer, id: nodeId++ });
 
-        // Connect to next layer
+        // Connect to next layer with varying connection strengths
         if (layer < layers - 1) {
           const nextLayerNodes = nodesPerLayer[layer + 1];
-          const nextRadius = 2 + (layer + 1) * 0.5;
-          const nextYOffset = (layer + 1 - 2) * 1.5;
+          const nextRadius = layerRadii[layer + 1];
+          const nextYOffset = (layer + 1 - 3) * 1.8;
+          const nextSpiralOffset = (layer + 1) * 0.3;
 
           for (let nextNode = 0; nextNode < nextLayerNodes; nextNode++) {
-            if (Math.random() > 0.3) { // 70% connection probability
+            const connectionProbability = 0.4 + Math.random() * 0.4; // 40-80% connection probability
+            if (Math.random() < connectionProbability) {
               const nextAngle = (nextNode / nextLayerNodes) * Math.PI * 2;
-              const nextX = Math.cos(nextAngle) * nextRadius;
-              const nextZ = Math.sin(nextAngle) * nextRadius;
-              const nextY = nextYOffset + (Math.random() - 0.5) * 0.5;
+              const nextX = Math.cos(nextAngle + nextSpiralOffset) * nextRadius;
+              const nextZ = Math.sin(nextAngle + nextSpiralOffset) * nextRadius;
+              const nextY = nextYOffset + Math.sin(nextAngle * 3) * 0.3;
+
+              const distance = Math.sqrt(
+                Math.pow(nextX - x, 2) + Math.pow(nextY - y, 2) + Math.pow(nextZ - z, 2)
+              );
+              const strength = Math.max(0.1, 1 - distance / 8); // Connection strength based on distance
 
               newConnections.push({
                 start: [x, y, z],
-                end: [nextX, nextY, nextZ]
+                end: [nextX, nextY, nextZ],
+                strength
               });
             }
           }
+        }
+
+        // Add some cross-layer connections for complexity
+        if (layer < layers - 2 && Math.random() > 0.8) {
+          const targetLayer = layer + 2;
+          const targetLayerNodes = nodesPerLayer[targetLayer];
+          const targetRadius = layerRadii[targetLayer];
+          const targetYOffset = (targetLayer - 3) * 1.8;
+          const targetSpiralOffset = targetLayer * 0.3;
+
+          const targetNode = Math.floor(Math.random() * targetLayerNodes);
+          const targetAngle = (targetNode / targetLayerNodes) * Math.PI * 2;
+          const targetX = Math.cos(targetAngle + targetSpiralOffset) * targetRadius;
+          const targetZ = Math.sin(targetAngle + targetSpiralOffset) * targetRadius;
+          const targetY = targetYOffset + Math.sin(targetAngle * 3) * 0.3;
+
+          newConnections.push({
+            start: [x, y, z],
+            end: [targetX, targetY, targetZ],
+            strength: 0.3
+          });
         }
       }
     }
@@ -122,53 +156,116 @@ function NeuralNetworkStructure({ scrollProgress }: { scrollProgress: number }) 
     if (groupRef.current) {
       const time = state.clock.elapsedTime;
 
-      // Rotate based on scroll and time
-      groupRef.current.rotation.y = scrollProgress * Math.PI * 2 + time * 0.1;
-      groupRef.current.rotation.x = Math.sin(time * 0.3) * 0.2 + scrollProgress * 0.5;
-      groupRef.current.rotation.z = Math.cos(time * 0.2) * 0.1;
+      // Complex rotation based on scroll and time
+      groupRef.current.rotation.y = scrollProgress * Math.PI * 4 + time * 0.08;
+      groupRef.current.rotation.x = Math.sin(time * 0.2) * 0.15 + scrollProgress * 0.3;
+      groupRef.current.rotation.z = Math.cos(time * 0.15) * 0.1;
 
-      // Scale based on scroll
-      const scale = 1 + scrollProgress * 0.5;
+      // Dynamic scale with breathing effect
+      const breathe = Math.sin(time * 0.5) * 0.1;
+      const scale = 0.8 + scrollProgress * 0.6 + breathe;
       groupRef.current.scale.setScalar(scale);
+    }
+
+    if (coreRef.current) {
+      const time = state.clock.elapsedTime;
+      coreRef.current.rotation.x = time * 0.3;
+      coreRef.current.rotation.y = time * 0.2;
+      coreRef.current.rotation.z = time * 0.1;
     }
   });
 
   return (
     <group ref={groupRef}>
-      {/* Render connections first (behind nodes) */}
+      {/* Render connections with varying strengths */}
       {connections.map((connection, index) => (
         <NeuralConnection
           key={`connection-${index}`}
           start={connection.start}
           end={connection.end}
-          opacity={0.2 + scrollProgress * 0.3}
+          opacity={0.1 + connection.strength * 0.4 + scrollProgress * 0.3}
         />
       ))}
 
-      {/* Render nodes */}
-      {nodes.map((position, index) => (
-        <NeuralNode
-          key={`node-${index}`}
-          position={position}
-          size={0.04 + Math.random() * 0.03}
-          intensity={0.3 + scrollProgress * 0.7}
-        />
-      ))}
-
-      {/* Central core */}
-      <Float speed={2} rotationIntensity={0.5} floatIntensity={0.3}>
-        <mesh position={[0, 0, 0]}>
-          <icosahedronGeometry args={[0.8, 2]} />
-          <meshStandardMaterial
-            color="#00ff88"
-            emissive="#00ff88"
-            emissiveIntensity={0.4 + scrollProgress * 0.6}
-            metalness={0.9}
-            roughness={0.1}
-            wireframe={true}
+      {/* Render nodes with layer-based sizing */}
+      {nodes.map((node, index) => {
+        const layerIntensity = 0.3 + (node.layer / 6) * 0.4;
+        const size = 0.03 + (node.layer === 3 ? 0.04 : 0.02); // Larger nodes in center layer
+        return (
+          <NeuralNode
+            key={`node-${index}`}
+            position={node.position}
+            size={size}
+            intensity={layerIntensity + scrollProgress * 0.5}
+            color={node.layer === 3 ? "#00ff88" : "#0088ff"}
           />
-        </mesh>
-      </Float>
+        );
+      })}
+
+      {/* Enhanced central core with multiple geometries */}
+      <group ref={coreRef}>
+        <Float speed={1.5} rotationIntensity={0.4} floatIntensity={0.2}>
+          {/* Main core */}
+          <mesh position={[0, 0, 0]}>
+            <dodecahedronGeometry args={[0.6, 1]} />
+            <meshStandardMaterial
+              color="#00ff88"
+              emissive="#00ff88"
+              emissiveIntensity={0.5 + scrollProgress * 0.8}
+              metalness={0.9}
+              roughness={0.1}
+              wireframe={false}
+            />
+          </mesh>
+
+          {/* Wireframe overlay */}
+          <mesh position={[0, 0, 0]}>
+            <dodecahedronGeometry args={[0.65, 1]} />
+            <meshBasicMaterial
+              color="#00ff88"
+              wireframe={true}
+              transparent={true}
+              opacity={0.6 + scrollProgress * 0.4}
+            />
+          </mesh>
+
+          {/* Inner rotating sphere */}
+          <mesh position={[0, 0, 0]}>
+            <sphereGeometry args={[0.4, 32, 32]} />
+            <meshStandardMaterial
+              color="#0088ff"
+              emissive="#0088ff"
+              emissiveIntensity={0.3 + scrollProgress * 0.5}
+              metalness={0.8}
+              roughness={0.2}
+              transparent={true}
+              opacity={0.7}
+            />
+          </mesh>
+        </Float>
+
+        {/* Orbiting elements */}
+        {[...Array(6)].map((_, i) => (
+          <Float key={i} speed={2 + i * 0.3} rotationIntensity={0.5} floatIntensity={0.3}>
+            <mesh
+              position={[
+                Math.cos((i / 6) * Math.PI * 2) * 1.2,
+                Math.sin((i / 3) * Math.PI) * 0.4,
+                Math.sin((i / 6) * Math.PI * 2) * 1.2,
+              ]}
+            >
+              <octahedronGeometry args={[0.08, 0]} />
+              <meshStandardMaterial
+                color="#ffffff"
+                emissive="#00ff88"
+                emissiveIntensity={0.6 + scrollProgress * 0.4}
+                metalness={0.9}
+                roughness={0.1}
+              />
+            </mesh>
+          </Float>
+        ))}
+      </group>
     </group>
   );
 }

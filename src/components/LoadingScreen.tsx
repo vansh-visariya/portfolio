@@ -34,12 +34,12 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
     >
       <div className="text-center">
         <motion.div
-          className="text-6xl md:text-8xl font-bold text-white mb-8"
+          className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-white via-green-400 to-white bg-clip-text text-transparent mb-8"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          MANTIS
+          WUKONG
         </motion.div>
         
         <motion.div

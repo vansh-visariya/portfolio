@@ -58,24 +58,34 @@ const WorkSection = () => {
   const [hoveredProject, setHoveredProject] = useState<number | null>(null);
 
   return (
-    <section ref={ref} id="work" className="py-20 px-4 bg-black">
+    <section ref={ref} id="work" className="py-32 px-6 bg-gradient-to-b from-black via-gray-900/30 to-black">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
+          <motion.h2
+            className="text-5xl md:text-7xl font-bold mb-8 gradient-text"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+            transition={{ duration: 1, delay: 0.2 }}
+          >
             Featured Projects
-          </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          </motion.h2>
+          <motion.p
+            className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed"
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
             A showcase of my AI/ML projects, from intelligent chatbots to transformer models
             built from scratch, demonstrating expertise in modern AI development.
-          </p>
+          </motion.p>
         </motion.div>
 
-        <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-10 lg:gap-12">
           {projects.map((project, index) => (
             <motion.div
               key={project.id}
