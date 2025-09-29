@@ -3,12 +3,12 @@
 import { useEffect, useState } from 'react';
 import Navigation from '@/components/Navigation';
 import Scene3D from '@/components/Scene3D';
-import ServicesSection from '@/components/ServicesSection';
+// import ServicesSection from '@/components/ServicesSection';
 import WorkSection from '@/components/WorkSection';
 import LoadingScreen from '@/components/LoadingScreen';
 import CursorEffect from '@/components/CursorEffect';
 import { motion, AnimatePresence } from 'framer-motion';
-import Capabilities from '@/components/Capabilities';
+// Capabilities section removed per request
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -82,18 +82,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Tagline Sections inspired by Mantis */}
+      {/* Tagline Sections (AI/ML focus) */}
       <section className="relative px-6 py-32 z-10">
         <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
         <div className="max-w-7xl mx-auto">
           <motion.h2
-            className="text-[10vw] leading-[0.9] md:text-8xl font-bold tracking-tight"
+            className="text-[9vw] leading-[0.95] md:text-7xl font-bold tracking-tight"
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            we create feelings.
+            Building reliable AI/ML systems with production‑grade LLMs.
           </motion.h2>
         </div>
       </section>
@@ -102,22 +102,24 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-start">
           <motion.h3
-            className="text-5xl md:text-7xl font-semibold"
+            className="text-4xl md:text-6xl font-semibold"
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
             viewport={{ once: true }}
           >
-            Great design doesn’t just guide behavior.
+            From data pipelines to fine‑tuning,
+            I ship measurable results.
           </motion.h3>
           <motion.h3
-            className="text-5xl md:text-7xl font-semibold text-white/80"
+            className="text-4xl md:text-6xl font-semibold text-white/80"
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            It speaks directly to the nervous system.
+            LLM apps, RAG search, agents—
+            optimized for latency, safety, and UX.
           </motion.h3>
         </div>
       </section>
@@ -206,8 +208,7 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* Services Section */}
-      <Capabilities />
+      {/* Services Section removed */}
 
       {/* Work Section */}
       <WorkSection />
@@ -267,7 +268,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-16 px-6 border-t border-gray-800/50 bg-gradient-to-t from-black to-gray-900/30">
+      <footer className="py-20 px-6 border-top border-gray-800/50 bg-gradient-to-t from-black to-gray-900/30">
         <motion.div
           className="max-w-7xl mx-auto"
           initial={{ opacity: 0, y: 30 }}
@@ -275,41 +276,37 @@ export default function Home() {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <motion.div
-              className="text-3xl font-bold mb-6 md:mb-0 gradient-text"
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              WUKONG
-            </motion.div>
-            <motion.div
-              className="flex flex-col md:items-end gap-3 text-gray-300"
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              viewport={{ once: true }}
-            >
-              <a href="mailto:hey@mantis.works" className="text-xl hover:text-white transition-colors">hey@mantis.works</a>
-              <div className="flex gap-6 text-gray-400">
-                <a href="https://github.com/vansh-visariya" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a>
-                <a href="https://linkedin.com/in/vansh-visariya" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">LinkedIn</a>
-                <a href="https://huggingface.co/vansh-myth" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">HuggingFace</a>
+          <div className="grid md:grid-cols-3 gap-10">
+            <div>
+              <div className="text-3xl font-bold mb-4 gradient-text">WUKONG</div>
+              <p className="text-white/70 text-sm max-w-sm">
+                AI/ML developer focused on LLM applications, agents, and RAG systems that balance speed, accuracy, and delightful UX.
+              </p>
+            </div>
+            <div>
+              <div className="text-white/80 font-semibold mb-4">Quick Links</div>
+              <ul className="space-y-2 text-white/60">
+                <li><a href="#home" className="hover:text-white transition-colors">Home</a></li>
+                <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
+                <li><a href="#work" className="hover:text-white transition-colors">Projects</a></li>
+                <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>
+              </ul>
+            </div>
+            <div>
+              <div className="text-white/80 font-semibold mb-4">Contact</div>
+              <div className="space-y-3">
+                <a href="mailto:hey@mantis.works" className="block hover:text-white text-white/70 transition-colors">hey@mantis.works</a>
+                <div className="flex gap-6 text-white/60">
+                  <a href="https://github.com/vansh-visariya" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a>
+                  <a href="https://linkedin.com/in/vansh-visariya" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">LinkedIn</a>
+                  <a href="https://huggingface.co/vansh-myth" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">HuggingFace</a>
+                </div>
               </div>
-            </motion.div>
+            </div>
           </div>
-          <motion.div
-            className="mt-12 pt-8 border-t border-gray-800/50 text-center text-gray-500"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <p className="text-lg">© 2024 Wukong AI/ML Developer. All rights reserved.</p>
-            <p className="text-sm mt-2 text-gray-600">We create feelings. Streamlined by AI. Made with love.</p>
-          </motion.div>
+          <div className="mt-12 pt-8 border-t border-gray-800/50 text-center text-gray-500">
+            <p className="text-sm">© {new Date().getFullYear()} Wukong AI/ML Developer. All rights reserved.</p>
+          </div>
         </motion.div>
       </footer>
       </div>
