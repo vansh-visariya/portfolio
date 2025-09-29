@@ -58,7 +58,8 @@ const WorkSection = () => {
   const [hoveredProject, setHoveredProject] = useState<number | null>(null);
 
   return (
-    <section ref={ref} id="work" className="py-32 px-6 bg-gradient-to-b from-black via-gray-900/30 to-black">
+    <section ref={ref} id="work" className="relative py-32 px-6 z-10">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -85,7 +86,7 @@ const WorkSection = () => {
           </motion.p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-10 lg:gap-12">
+        <div className="grid lg:grid-cols-3 gap-10 lg:gap-12 relative z-10">
           {projects.map((project, index) => (
             <motion.div
               key={project.id}
@@ -99,11 +100,10 @@ const WorkSection = () => {
             >
               <div className={`
                 relative overflow-hidden rounded-xl p-8 h-full
-                bg-gradient-to-br ${project.color}
-                backdrop-blur-sm border border-white/10 hover:border-green-400/40
+                bg-black/60
+                backdrop-blur-md border border-white/10 hover:border-white/30
                 transition-all duration-500 ease-out
-                group-hover:scale-105 group-hover:shadow-2xl
-                glass-effect
+                group-hover:scale-[1.02] group-hover:shadow-2xl
               `}>
                 {/* Background effects */}
                 <div className="absolute inset-0 opacity-10">

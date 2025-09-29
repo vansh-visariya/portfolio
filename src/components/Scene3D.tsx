@@ -382,61 +382,7 @@ const Scene3D = () => {
         </Suspense>
       </Canvas>
 
-      {/* Overlay content (center title) */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 1 }}
-          className="text-center text-white z-10"
-        >
-          <motion.h1
-            className="text-6xl md:text-8xl font-bold mb-4 tracking-wider bg-gradient-to-r from-white via-green-400 to-white bg-clip-text text-transparent"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 1.5, duration: 0.8, ease: "easeOut" }}
-          >
-            WUKONG
-          </motion.h1>
-          <motion.p
-            className="text-xl md:text-2xl font-light tracking-wide opacity-80"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2, duration: 0.6 }}
-          >
-            AI/ML Developer
-          </motion.p>
-          <motion.div
-            className="mt-8 text-sm md:text-base opacity-60 max-w-2xl mx-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 2.5, duration: 0.8 }}
-          >
-            Transforming complex problems into elegant, intelligent solutions
-          </motion.div>
-        </motion.div>
-      </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 pointer-events-none"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 3, duration: 0.8 }}
-      >
-        <motion.div
-          className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <motion.div
-            className="w-1 h-3 bg-green-400/70 rounded-full mt-2"
-            animate={{ opacity: [0.3, 1, 0.3] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </motion.div>
-        <div className="text-xs text-white/50 mt-2 text-center">Scroll to explore</div>
-      </motion.div>
+      {/* Minimal UI elements only (no large center text to avoid overlap) */}
 
       {/* Progress indicator */}
       <div className="absolute top-0 left-0 w-full h-1 bg-black/20 z-10">

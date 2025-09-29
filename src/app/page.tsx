@@ -8,6 +8,7 @@ import WorkSection from '@/components/WorkSection';
 import LoadingScreen from '@/components/LoadingScreen';
 import CursorEffect from '@/components/CursorEffect';
 import { motion, AnimatePresence } from 'framer-motion';
+import Capabilities from '@/components/Capabilities';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -59,8 +60,8 @@ export default function Home() {
       {/* Hero Section with 3D Model */}
       {/* Render the 3D background once; sections stack over it */}
       <Scene3D />
-      <section id="home" className="relative min-h-[90vh] flex items-end pb-24">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
+      <section id="home" className="relative min-h-[90vh] flex items-end pb-24 z-10">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70" />
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <motion.h1
             className="text-6xl md:text-8xl font-bold tracking-tight mb-6"
@@ -82,8 +83,8 @@ export default function Home() {
       </section>
 
       {/* Tagline Sections inspired by Mantis */}
-      <section className="relative px-6 py-32">
-        <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px]" />
+      <section className="relative px-6 py-32 z-10">
+        <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
         <div className="max-w-7xl mx-auto">
           <motion.h2
             className="text-[10vw] leading-[0.9] md:text-8xl font-bold tracking-tight"
@@ -97,8 +98,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative px-6 pb-16">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/40" />
+      <section className="relative px-6 pb-16 z-10">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-start">
           <motion.h3
             className="text-5xl md:text-7xl font-semibold"
@@ -206,7 +207,7 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <ServicesSection />
+      <Capabilities />
 
       {/* Work Section */}
       <WorkSection />
@@ -285,15 +286,18 @@ export default function Home() {
               WUKONG
             </motion.div>
             <motion.div
-              className="flex space-x-8 text-gray-400"
+              className="flex flex-col md:items-end gap-3 text-gray-300"
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
               viewport={{ once: true }}
             >
-              <a href="https://github.com/vansh-visariya" target="_blank" rel="noopener noreferrer" className="hover:text-green-400 transition-all duration-300 hover:scale-110 transform text-lg font-medium">GitHub</a>
-              <a href="https://linkedin.com/in/vansh-visariya" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-all duration-300 hover:scale-110 transform text-lg font-medium">LinkedIn</a>
-              <a href="https://huggingface.co/vansh-myth" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400 transition-all duration-300 hover:scale-110 transform text-lg font-medium">HuggingFace</a>
+              <a href="mailto:hey@mantis.works" className="text-xl hover:text-white transition-colors">hey@mantis.works</a>
+              <div className="flex gap-6 text-gray-400">
+                <a href="https://github.com/vansh-visariya" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a>
+                <a href="https://linkedin.com/in/vansh-visariya" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">LinkedIn</a>
+                <a href="https://huggingface.co/vansh-myth" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">HuggingFace</a>
+              </div>
             </motion.div>
           </div>
           <motion.div
@@ -304,7 +308,7 @@ export default function Home() {
             viewport={{ once: true }}
           >
             <p className="text-lg">© 2024 Wukong AI/ML Developer. All rights reserved.</p>
-            <p className="text-sm mt-2 text-gray-600">Building the future with artificial intelligence</p>
+            <p className="text-sm mt-2 text-gray-600">We create feelings. Streamlined by AI. Made with love.</p>
           </motion.div>
         </motion.div>
       </footer>
