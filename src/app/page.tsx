@@ -15,8 +15,10 @@ export default function Home() {
   useEffect(() => {
     const formatTime = () => {
       const d = new Date();
-      const hh = String(d.getHours()).padStart(2, '0');
-      const mm = String(d.getMinutes()).padStart(2, '0');
+      // Convert to India time (UTC+5:30)
+      const indiaTime = new Date(d.getTime() + (5.5 * 60 * 60 * 1000));
+      const hh = String(indiaTime.getUTCHours()).padStart(2, '0');
+      const mm = String(indiaTime.getUTCMinutes()).padStart(2, '0');
       return `${hh}:${mm}`;
     };
     setNow(formatTime());
@@ -155,7 +157,7 @@ export default function Home() {
 
         {/* Mission Statement */}
         <section className="relative px-6 py-24 z-10">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-6xl mx-auto text-center">
             <motion.div
               className="pixel-card p-8 text-center"
               initial={{ opacity: 0, y: 50 }}
@@ -184,7 +186,7 @@ export default function Home() {
 
         {/* Skills/Abilities Grid */}
         <section className="relative px-6 py-24 z-10">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-6xl mx-auto text-center">
             <motion.h2
               className="text-2xl md:text-3xl font-bold text-center mb-12 pixel-text-accent"
               initial={{ opacity: 0, y: 30 }}
@@ -195,7 +197,7 @@ export default function Home() {
               === PLAYER ABILITIES ===
             </motion.h2>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
               {[
                 {
                   title: "DATA_PIPELINES.EXE",
@@ -260,16 +262,16 @@ export default function Home() {
 
         {/* About/Player Info Section */}
         <section id="about" className="relative py-24 px-6 z-10">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-6xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
               viewport={{ once: true }}
-              className="grid lg:grid-cols-2 gap-12 items-start"
+              className="grid lg:grid-cols-2 gap-12 items-start justify-items-center max-w-5xl mx-auto"
             >
               {/* Player Bio */}
-              <div className="space-y-8">
+              <div className="space-y-8 text-left w-full max-w-lg">
                 <motion.div
                   initial={{ opacity: 0, x: -30 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -324,7 +326,7 @@ export default function Home() {
 
               {/* Stats Panel */}
               <motion.div
-                className="pixel-card p-6"
+                className="pixel-card p-6 w-full max-w-lg"
                 initial={{ opacity: 0, x: 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
@@ -406,21 +408,21 @@ export default function Home() {
           </motion.p>
 
           <motion.div
-            className="grid md:grid-cols-3 gap-8 mb-16"
+            className="grid md:grid-cols-3 gap-6 mb-12 justify-items-center"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
             viewport={{ once: true }}
           >
             {[
-              { icon: "⚡", title: "Fast Delivery", desc: "Rapid prototyping to production deployment" },
-              { icon: "🎯", title: "Focused Solutions", desc: "Tailored AI systems for your specific needs" },
-              { icon: "🚀", title: "Scalable Architecture", desc: "Built for growth and performance" }
+              { icon: "⚡", title: "FAST_DELIVERY", desc: "Rapid prototyping to production deployment" },
+              { icon: "🎯", title: "FOCUSED_SOLUTIONS", desc: "Tailored AI systems for your specific needs" },
+              { icon: "🚀", title: "SCALABLE_ARCH", desc: "Built for growth and performance" }
             ].map((item, index) => (
-              <div key={item.title} className="glass-effect p-6 rounded-2xl">
-                <div className="text-3xl mb-4">{item.icon}</div>
-                <h3 className="text-xl font-bold mb-2 text-white">{item.title}</h3>
-                <p className="text-white/70">{item.desc}</p>
+              <div key={item.title} className="pixel-card p-6 w-full max-w-sm">
+                <div className="text-2xl mb-4">{item.icon}</div>
+                <h3 className="text-sm font-bold mb-3 pixel-text-primary">{item.title}</h3>
+                <p className="text-xs text-white/80">{item.desc}</p>
               </div>
             ))}
           </motion.div>
@@ -452,60 +454,43 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="relative py-20 px-6 z-10">
-        <div className="absolute inset-0 section-overlay" />
+      <footer className="relative py-16 px-6 z-10">
         <motion.div
-          className="max-w-7xl mx-auto"
+          className="max-w-6xl mx-auto text-center"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <div className="grid md:grid-cols-3 gap-10">
-            <div>
-              <div className="text-4xl font-black mb-6 gradient-text">WUKONG</div>
-              <p className="text-white/70 text-base max-w-sm leading-relaxed">
-                AI/ML developer focused on LLM applications, agents, and RAG systems that balance speed, accuracy, and delightful UX.
+          <div className="pixel-card p-8 max-w-4xl mx-auto">
+            <div className="text-2xl font-bold mb-6 pixel-text-primary">WUKONG.EXE</div>
+            <p className="text-sm text-white/80 mb-6 leading-relaxed">
+              &gt; AI/ML DEVELOPER FOCUSED ON LLM APPLICATIONS, AGENTS, AND RAG SYSTEMS
+              <br />
+              &gt; BALANCING SPEED, ACCURACY, AND DELIGHTFUL USER EXPERIENCE
+            </p>
+            <div className="flex gap-4 justify-center mb-6">
+              <a href="https://github.com/vansh-visariya" target="_blank" rel="noopener noreferrer"
+                 className="pixel-btn text-xs">
+                [GITHUB]
+              </a>
+              <a href="https://linkedin.com/in/vansh-visariya" target="_blank" rel="noopener noreferrer"
+                 className="pixel-btn text-xs">
+                [LINKEDIN]
+              </a>
+              <a href="https://huggingface.co/vansh-myth" target="_blank" rel="noopener noreferrer"
+                 className="pixel-btn text-xs">
+                [HUGGINGFACE]
+              </a>
+            </div>
+
+            <div className="border-t-2 border-gray-600 pt-4">
+              <p className="text-xs pixel-text-accent">
+                © {new Date().getFullYear()} WUKONG.EXE - ALL RIGHTS RESERVED
               </p>
-              <div className="flex gap-4 mt-6">
-                <a href="https://github.com/vansh-visariya" target="_blank" rel="noopener noreferrer"
-                   className="w-10 h-10 glass-effect rounded-full flex items-center justify-center hover:scale-110 transition-transform">
-                  <span className="text-white/70 hover:text-white">📧</span>
-                </a>
-                <a href="https://linkedin.com/in/vansh-visariya" target="_blank" rel="noopener noreferrer"
-                   className="w-10 h-10 glass-effect rounded-full flex items-center justify-center hover:scale-110 transition-transform">
-                  <span className="text-white/70 hover:text-white">💼</span>
-                </a>
-                <a href="https://huggingface.co/vansh-myth" target="_blank" rel="noopener noreferrer"
-                   className="w-10 h-10 glass-effect rounded-full flex items-center justify-center hover:scale-110 transition-transform">
-                  <span className="text-white/70 hover:text-white">🤗</span>
-                </a>
-              </div>
-            </div>
-            <div>
-              <div className="text-white/80 font-semibold mb-4">Quick Links</div>
-              <ul className="space-y-2 text-white/60">
-                <li><a href="#home" className="hover:text-white transition-colors">Home</a></li>
-                <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
-                <li><a href="#work" className="hover:text-white transition-colors">Projects</a></li>
-                <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>
-              </ul>
-            </div>
-            <div>
-              <div className="text-white/80 font-semibold mb-4">Contact</div>
-              <div className="space-y-3">
-                <a href="mailto:hey@mantis.works" className="block hover:text-white text-white/70 transition-colors">hey@mantis.works</a>
-                <div className="flex gap-6 text-white/60">
-                  <a href="https://github.com/vansh-visariya" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a>
-                  <a href="https://linkedin.com/in/vansh-visariya" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">LinkedIn</a>
-                  <a href="https://huggingface.co/vansh-myth" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">HuggingFace</a>
-                </div>
-              </div>
             </div>
           </div>
-          <div className="mt-12 pt-8 border-t border-gray-800/50 text-center text-gray-500">
-            <p className="text-sm">© {new Date().getFullYear()} Wukong AI/ML Developer. All rights reserved.</p>
-          </div>
+
         </motion.div>
       </footer>
       </div>

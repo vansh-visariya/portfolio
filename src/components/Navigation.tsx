@@ -37,9 +37,9 @@ const Navigation = () => {
       animate={{ y: 0 }}
       className={`fixed top-20 left-0 right-0 z-40 transition-all duration-300 ${
         scrolled ? 'pixel-box' : 'pixel-box'
-      } mx-4`}
+      }`}
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mx-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <motion.div

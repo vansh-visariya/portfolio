@@ -205,6 +205,16 @@ body {
     0 0 0 var(--pixel-shadow);
 }
 
+.pixel-btn-primary {
+  background: var(--pixel-primary);
+  color: var(--pixel-shadow);
+}
+
+.pixel-btn-secondary {
+  background: var(--pixel-secondary);
+  color: var(--pixel-shadow);
+}
+
 /* Pixel cards */
 .pixel-card {
   background: var(--pixel-surface);
@@ -233,4 +243,25 @@ body {
   background: var(--pixel-primary);
   opacity: 0.3;
   animation: scan-line 3s linear infinite;
+}
+
+/* Ensure proper centering for all sections */
+section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Grid centering utilities */
+.grid-center {
+  display: grid;
+  place-items: center;
+}
+
+/* Responsive max-widths for better centering */
+.content-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
 }

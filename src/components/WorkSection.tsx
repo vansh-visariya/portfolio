@@ -85,14 +85,14 @@ const WorkSection = () => {
           </motion.p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-10 lg:gap-12 relative z-10">
+        <div className="grid lg:grid-cols-3 gap-10 lg:gap-12 relative z-10 justify-items-center">
           {projects.map((project, index) => (
             <motion.div
               key={project.id}
               initial={{ opacity: 0, y: 50 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
               transition={{ duration: 0.8, delay: index * 0.2 }}
-              className="group cursor-pointer"
+              className="group cursor-pointer w-full max-w-sm"
               onMouseEnter={() => setHoveredProject(project.id)}
               onMouseLeave={() => setHoveredProject(null)}
               onClick={() => window.open(project.github, '_blank')}
