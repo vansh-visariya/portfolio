@@ -35,24 +35,24 @@ const Navigation = () => {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        scrolled ? 'bg-black/80 backdrop-blur-md' : 'bg-black/50 backdrop-blur-sm'
-      }`}
+      className={`fixed top-20 left-0 right-0 z-40 transition-all duration-300 ${
+        scrolled ? 'pixel-box' : 'pixel-box'
+      } mx-4`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-white font-bold text-xl"
+            className="pixel-text-primary font-bold text-lg"
           >
-            WUKONG
+            WUKONG.EXE
           </motion.div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex items-center space-x-1">
             {navItems.map((item, index) => (
               <motion.button
                 key={item.name}
@@ -60,9 +60,9 @@ const Navigation = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + index * 0.1 }}
-                className="text-white hover:text-gray-300 transition-colors duration-200 text-sm font-medium"
+                className="pixel-btn text-xs"
               >
-                {item.name}
+                [{item.name.toUpperCase()}]
               </motion.button>
             ))}
           </div>
@@ -71,9 +71,9 @@ const Navigation = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-white hover:text-gray-300 transition-colors"
+              className="pixel-btn text-xs"
             >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
+              {isOpen ? '[X]' : '[MENU]'}
             </button>
           </div>
         </div>
@@ -83,14 +83,14 @@ const Navigation = () => {
       <motion.div
         initial={false}
         animate={{ height: isOpen ? 'auto' : 0 }}
-        className="md:hidden overflow-hidden bg-black/90 backdrop-blur-md"
+        className="md:hidden overflow-hidden glass-effect-strong"
       >
-        <div className="px-4 py-4 space-y-4">
+        <div className="px-6 py-6 space-y-4">
           {navItems.map((item) => (
             <button
               key={item.name}
               onClick={() => handleNavClick(item.href)}
-              className="block text-white hover:text-gray-300 transition-colors duration-200 text-sm font-medium w-full text-left"
+              className="block text-white/80 hover:text-white transition-colors duration-300 text-base font-medium w-full text-left py-2 px-4 rounded-lg hover:bg-white/10"
             >
               {item.name}
             </button>

@@ -38,7 +38,7 @@ const CursorEffect = () => {
     <>
       {/* Main cursor */}
       <motion.div
-        className="fixed top-0 left-0 w-4 h-4 bg-green-400 rounded-full pointer-events-none z-50 mix-blend-difference"
+        className="fixed top-0 left-0 w-4 h-4 bg-gradient-to-r from-indigo-400 to-cyan-400 rounded-full pointer-events-none z-50 mix-blend-difference"
         animate={{
           x: mousePosition.x - 8,
           y: mousePosition.y - 8,
@@ -50,10 +50,10 @@ const CursorEffect = () => {
           damping: 28,
         }}
       />
-      
+
       {/* Cursor trail */}
       <motion.div
-        className="fixed top-0 left-0 w-8 h-8 border border-green-400/50 rounded-full pointer-events-none z-40"
+        className="fixed top-0 left-0 w-8 h-8 border border-indigo-400/50 rounded-full pointer-events-none z-40"
         animate={{
           x: mousePosition.x - 16,
           y: mousePosition.y - 16,
@@ -63,6 +63,22 @@ const CursorEffect = () => {
           type: "spring",
           stiffness: 150,
           damping: 15,
+        }}
+      />
+
+      {/* Outer glow */}
+      <motion.div
+        className="fixed top-0 left-0 w-12 h-12 border border-cyan-400/20 rounded-full pointer-events-none z-30"
+        animate={{
+          x: mousePosition.x - 24,
+          y: mousePosition.y - 24,
+          scale: isHovering ? 1.5 : 1,
+          opacity: isHovering ? 0.8 : 0.3,
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 100,
+          damping: 20,
         }}
       />
     </>
