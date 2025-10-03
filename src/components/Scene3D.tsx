@@ -16,9 +16,10 @@ function NeuralNode({ position, size = 0.05, color = "#00ff88", intensity = 0.5 
   const meshRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
-    if (meshRef.current) {
+    if (meshRef.current && meshRef.current.material) {
       const time = state.clock.elapsedTime;
-      meshRef.current.material.emissiveIntensity = intensity + Math.sin(time * 2 + position[0]) * 0.3;
+      const material = meshRef.current.material as THREE.MeshStandardMaterial;
+      material.emissiveIntensity = intensity + Math.sin(time * 2 + position[0]) * 0.3;
     }
   });
 
@@ -42,12 +43,13 @@ function NeuralConnection({ start, end, opacity = 0.3 }: {
   end: [number, number, number];
   opacity?: number;
 }) {
-  const lineRef = useRef<THREE.Line>(null);
+  const lineRef = useRef<any>(null);
 
   useFrame((state) => {
-    if (lineRef.current) {
+    if (lineRef.current && lineRef.current.material) {
       const time = state.clock.elapsedTime;
-      lineRef.current.material.opacity = opacity + Math.sin(time * 3) * 0.2;
+      const material = lineRef.current.material as THREE.LineBasicMaterial;
+      material.opacity = opacity + Math.sin(time * 3) * 0.2;
     }
   });
 
@@ -304,6 +306,7 @@ function ParticleSystem({ count = 100 }: { count?: number }) {
           count={count}
           array={positions}
           itemSize={3}
+          args={[positions, 3]}
         />
       </bufferGeometry>
       <pointsMaterial
