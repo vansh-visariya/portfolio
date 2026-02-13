@@ -5,357 +5,237 @@ import Navigation from '@/components/Navigation';
 import Scene3D from '@/components/Scene3D';
 import WorkSection from '@/components/WorkSection';
 import LoadingScreen from '@/components/LoadingScreen';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { useRef } from 'react';
+
+/* ========== Reusable section fade-in ========== */
+function FadeSection({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-80px' });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, delay }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/* ========== Skills data ========== */
+const skills = [
+  { name: 'Transformer Architectures', level: 95 },
+  { name: 'NLP & Language Models', level: 92 },
+  { name: 'RAG Systems & Agents', level: 90 },
+  { name: 'Fine-tuning & LoRA', level: 88 },
+  { name: 'MLOps & Deployment', level: 85 },
+  { name: 'PyTorch & Deep Learning', level: 93 },
+];
+
+const abilities = [
+  {
+    icon: '⚙️',
+    title: 'Data Pipelines',
+    description: 'End-to-end ML pipelines with automated preprocessing, feature engineering, and monitoring.',
+  },
+  {
+    icon: '⚡',
+    title: 'Model Fine-tuning',
+    description: 'Custom model optimization with LoRA, QLoRA, and domain-specific training techniques.',
+  },
+  {
+    icon: '🧠',
+    title: 'RAG Systems',
+    description: 'Intelligent document retrieval with vector search, embeddings, and context-aware generation.',
+  },
+  {
+    icon: '💬',
+    title: 'LLM Applications',
+    description: 'Production-ready chatbots, autonomous agents, and conversational AI systems.',
+  },
+  {
+    icon: '🚀',
+    title: 'Optimization',
+    description: 'Latency reduction, cost optimization, quantization, and scalable inference.',
+  },
+  {
+    icon: '🛡️',
+    title: 'AI Safety',
+    description: 'Responsible AI with bias detection, safety guardrails, and evaluation frameworks.',
+  },
+];
+
+const techStack = ['PyTorch', 'Transformers', 'LangChain', 'LangGraph', 'Vector DBs', 'Streamlit', 'HuggingFace', 'MLOps'];
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const [now, setNow] = useState<string>("");
-  const [score, setScore] = useState(0);
-
-  useEffect(() => {
-    const formatTime = () => {
-      const d = new Date();
-      // Convert to India time (UTC+5:30)
-      const indiaTime = new Date(d.getTime() + (5.5 * 60 * 60 * 1000));
-      const hh = String(indiaTime.getUTCHours()).padStart(2, '0');
-      const mm = String(indiaTime.getUTCMinutes()).padStart(2, '0');
-      return `${hh}:${mm}`;
-    };
-    setNow(formatTime());
-    const t = setInterval(() => setNow(formatTime()), 1000);
-    return () => clearInterval(t);
-  }, []);
-
-  useEffect(() => {
-    // Simulate score increment for game feel
-    const scoreInterval = setInterval(() => {
-      setScore(prev => prev + Math.floor(Math.random() * 10));
-    }, 2000);
-    return () => clearInterval(scoreInterval);
-  }, []);
 
   return (
     <>
       <AnimatePresence>
-        {isLoading && (
-          <LoadingScreen onComplete={() => setIsLoading(false)} />
-        )}
+        {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
 
-      <div className="text-white overflow-x-hidden relative scan-lines">
-        {/* Pixel grid background */}
-        <div className="fixed inset-0 pointer-events-none opacity-10">
-          <div
-            className="w-full h-full"
-            style={{
-              backgroundImage: `
-                linear-gradient(rgba(0,255,65,0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,255,65,0.1) 1px, transparent 1px)
-              `,
-              backgroundSize: '20px 20px'
-            }}
-          />
-        </div>
+      <div className="text-white overflow-x-hidden relative">
+        {/* Subtle grid background */}
+        <div className="fixed inset-0 grid-bg pointer-events-none" />
 
-        {/* Game HUD */}
-        <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
-          <div className="flex items-center justify-between p-4">
-            {/* Left HUD */}
-            <div className="pointer-events-auto pixel-box px-4 py-2">
-              <div className="flex items-center gap-4 text-xs">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-400 pixel-blink"></div>
-                  <span className="pixel-text-primary">NYC</span>
-                </div>
-                <span>|</span>
-                <span className="pixel-text-accent">{now}</span>
-              </div>
-            </div>
-
-            {/* Right HUD */}
-            <div className="pointer-events-auto pixel-box px-4 py-2">
-              <div className="flex items-center gap-4 text-xs">
-                <span className="pixel-text-secondary">SCORE: {score.toLocaleString()}</span>
-                <span>|</span>
-                <a href="mailto:hey@mantis.works" className="pixel-text-accent hover:pixel-text-primary transition-colors">
-                  CONTACT
-                </a>
-              </div>
-            </div>
-          </div>
+        {/* Ambient gradient orbs */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-indigo-500/[0.04] blur-[120px]" />
+          <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-violet-500/[0.03] blur-[100px]" />
+          <div className="absolute top-[40%] right-[-15%] w-[400px] h-[400px] rounded-full bg-cyan-500/[0.03] blur-[100px]" />
         </div>
 
         <Navigation />
-
-        {/* Hero Section with 3D Model */}
         <Scene3D />
-        <section id="home" className="relative min-h-screen flex items-center justify-center z-10 pt-20">
-          <div className="relative z-10 mx-auto max-w-6xl px-6 text-center">
-            {/* Game Status */}
+
+        {/* ============================== */}
+        {/* Hero Section                   */}
+        {/* ============================== */}
+        <section id="home" className="relative min-h-screen flex items-center justify-center z-10 px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            {/* Status badge */}
             <motion.div
-              className="mb-12"
-              initial={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="mb-8"
             >
-              <div className="pixel-box-primary px-6 py-3 inline-block mb-8">
-                <div className="flex items-center gap-3 text-xs">
-                  <div className="w-2 h-2 bg-black pixel-pulse"></div>
-                  <span className="text-black font-bold">PLAYER: WUKONG</span>
-                  <span className="text-black">|</span>
-                  <span className="text-black">STATUS: ONLINE</span>
-                </div>
+              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/8 bg-white/[0.03] backdrop-blur-sm">
+                <div className="status-dot" />
+                <span className="text-sm text-white/60">Available for new projects</span>
               </div>
             </motion.div>
 
-            {/* Main Title */}
+            {/* Headline */}
             <motion.h1
-              className="text-6xl md:text-8xl font-bold mb-8 pixel-text-glow pixel-float"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.3 }}
+              className="heading-xl mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.4 }}
             >
-              WUKONG.EXE
+              I build{' '}
+              <span className="gradient-text">intelligent</span>
+              <br />
+              systems with AI
             </motion.h1>
 
-            {/* Subtitle */}
-            <motion.div
-              className="space-y-6 mb-12"
-              initial={{ opacity: 0, y: 20 }}
+            {/* Sub-headline */}
+            <motion.p
+              className="text-lg md:text-xl text-white/45 max-w-2xl mx-auto mb-10 leading-relaxed"
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.6 }}
+              transition={{ duration: 0.7, delay: 0.6 }}
             >
-              <div className="pixel-box px-8 py-4 max-w-4xl mx-auto">
-                <p className="text-sm md:text-base pixel-text-primary leading-relaxed">
-                  &gt; AI/ML DEVELOPER SPECIALIZING IN NEURAL NETWORKS
-                </p>
-                <p className="text-sm md:text-base text-white/80 leading-relaxed mt-2">
-                  &gt; BUILDING INTELLIGENT SYSTEMS WITH TRANSFORMERS, RAG & LLM APPS
-                </p>
-              </div>
-            </motion.div>
+              AI/ML engineer specializing in transformer architectures,
+              LLM applications, and production-grade RAG systems.
+            </motion.p>
 
-            {/* Action Buttons */}
+            {/* CTA buttons */}
             <motion.div
-              className="flex flex-col sm:flex-row gap-6 justify-center items-center"
-              initial={{ opacity: 0, y: 20 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center"
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.9 }}
+              transition={{ duration: 0.7, delay: 0.8 }}
             >
-              <a href="#work" className="pixel-btn pixel-btn-primary">
-                [VIEW PROJECTS]
+              <a href="#work" className="btn-primary">
+                <span>View Projects</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
               </a>
-              <a href="#about" className="pixel-btn">
-                [ABOUT PLAYER]
-              </a>
-              <a href="mailto:hey@mantis.works" className="pixel-btn pixel-btn-secondary">
-                [SEND MESSAGE]
+              <a href="#about" className="btn-outline">
+                About Me
               </a>
             </motion.div>
-          </div>
-        </section>
 
-        {/* Mission Statement */}
-        <section className="relative px-6 py-24 z-10">
-          <div className="max-w-6xl mx-auto text-center">
+            {/* Scroll indicator */}
             <motion.div
-              className="pixel-card p-8 text-center"
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
+              className="mt-20"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.5, duration: 1 }}
             >
-              <h2 className="text-2xl md:text-4xl font-bold mb-8 pixel-text-secondary">
-                === MISSION BRIEFING ===
-              </h2>
-
-              <div className="space-y-6 text-sm md:text-base">
-                <p className="pixel-text-primary">
-                  &gt; OBJECTIVE: BUILD RELIABLE AI/ML SYSTEMS WITH PRODUCTION-GRADE LLMS
-                </p>
-                <p className="text-white/80">
-                  &gt; TRANSFORMING COMPLEX AI RESEARCH INTO SCALABLE SOLUTIONS
-                </p>
-                <p className="text-white/80">
-                  &gt; DELIVERING MEASURABLE BUSINESS IMPACT THROUGH INTELLIGENT SYSTEMS
-                </p>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Skills/Abilities Grid */}
-        <section className="relative px-6 py-24 z-10">
-          <div className="max-w-6xl mx-auto text-center">
-            <motion.h2
-              className="text-2xl md:text-3xl font-bold text-center mb-12 pixel-text-accent"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              === PLAYER ABILITIES ===
-            </motion.h2>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-              {[
-                {
-                  title: "DATA_PIPELINES.EXE",
-                  description: "End-to-end ML pipelines with automated preprocessing & monitoring",
-                  icon: "⚙️",
-                  level: "LVL 95"
-                },
-                {
-                  title: "FINE_TUNING.EXE",
-                  description: "Custom model optimization with LoRA, QLoRA & domain training",
-                  icon: "⚡",
-                  level: "LVL 92"
-                },
-                {
-                  title: "RAG_SYSTEMS.EXE",
-                  description: "Intelligent document retrieval with vector search",
-                  icon: "🧠",
-                  level: "LVL 88"
-                },
-                {
-                  title: "LLM_APPS.EXE",
-                  description: "Production-ready chatbots, agents & conversational AI",
-                  icon: "💬",
-                  level: "LVL 90"
-                },
-                {
-                  title: "OPTIMIZATION.EXE",
-                  description: "Latency reduction, cost optimization & scalability",
-                  icon: "🚀",
-                  level: "LVL 87"
-                },
-                {
-                  title: "AI_SAFETY.EXE",
-                  description: "Responsible AI with bias detection & safety guardrails",
-                  icon: "🛡️",
-                  level: "LVL 85"
-                }
-              ].map((ability, index) => (
-                <motion.div
-                  key={ability.title}
-                  className="pixel-card p-6 group hover:pixel-glow"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-2xl">{ability.icon}</span>
-                    <span className="pixel-text-secondary text-xs">{ability.level}</span>
-                  </div>
-                  <h3 className="text-sm font-bold mb-3 pixel-text-primary">
-                    {ability.title}
-                  </h3>
-                  <p className="text-xs text-white/80 leading-relaxed">
-                    {ability.description}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* About/Player Info Section */}
-        <section id="about" className="relative py-24 px-6 z-10">
-          <div className="max-w-6xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1 }}
-              viewport={{ once: true }}
-              className="grid lg:grid-cols-2 gap-12 items-start justify-items-center max-w-5xl mx-auto"
-            >
-              {/* Player Bio */}
-              <div className="space-y-8 text-left w-full max-w-lg">
-                <motion.div
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  viewport={{ once: true }}
-                >
-                  <h2 className="text-2xl md:text-3xl font-bold mb-6 pixel-text-secondary">
-                    === PLAYER PROFILE ===
-                  </h2>
-                </motion.div>
-
-                <motion.div
-                  className="pixel-card p-6 space-y-4"
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
-                  viewport={{ once: true }}
-                >
-                  <div className="space-y-3 text-sm">
-                    <p className="pixel-text-primary">
-                      &gt; PLAYER_NAME: <span className="pixel-text-accent">WUKONG</span>
-                    </p>
-                    <p className="text-white/80">
-                      &gt; CLASS: AI/ML DEVELOPER
-                    </p>
-                    <p className="text-white/80">
-                      &gt; SPECIALIZATION: NEURAL NETWORKS & INTELLIGENT SYSTEMS
-                    </p>
-                    <p className="text-white/80">
-                      &gt; MISSION: BUILDING AI SOLUTIONS THAT PUSH BOUNDARIES
-                    </p>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  className="pixel-card p-6"
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.6 }}
-                  viewport={{ once: true }}
-                >
-                  <h3 className="text-sm font-bold mb-4 pixel-text-primary">TECH_STACK.CONFIG</h3>
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    {["PYTORCH", "TRANSFORMERS", "LANGCHAIN", "VECTOR_DBS", "MLOPS", "PRODUCTION_AI"].map((tech) => (
-                      <div key={tech} className="pixel-box-primary px-3 py-1 text-center">
-                        <span className="text-black font-bold">{tech}</span>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              </div>
-
-              {/* Stats Panel */}
               <motion.div
-                className="pixel-card p-6 w-full max-w-lg"
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                viewport={{ once: true }}
+                className="w-5 h-8 rounded-full border border-white/15 mx-auto flex justify-center pt-1.5"
+                animate={{ y: [0, 6, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
               >
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-3 h-3 bg-green-400 pixel-pulse"></div>
-                    <h3 className="text-lg font-bold pixel-text-secondary">PLAYER_STATS.DAT</h3>
-                  </div>
+                <div className="w-1 h-2 rounded-full bg-white/30" />
+              </motion.div>
+            </motion.div>
+          </div>
+        </section>
 
-                  <div className="space-y-4">
-                    {[
-                      { skill: "TRANSFORMER_ARCH", level: 95, color: "bg-green-400" },
-                      { skill: "NLP_PROCESSING", level: 92, color: "bg-yellow-400" },
-                      { skill: "CUSTOM_AI_SOLUTIONS", level: 88, color: "bg-orange-400" },
-                      { skill: "ML_RESEARCH", level: 85, color: "bg-red-400" }
-                    ].map((item, index) => (
-                      <div key={item.skill} className="space-y-2">
-                        <div className="flex justify-between items-center text-xs">
-                          <span className="pixel-text-primary">{item.skill}</span>
-                          <span className="pixel-text-accent">{item.level}/100</span>
+        {/* ============================== */}
+        {/* About Section                  */}
+        {/* ============================== */}
+        <section id="about" className="relative py-28 md:py-36 px-6 z-10">
+          <div className="max-w-6xl mx-auto">
+            <FadeSection>
+              <p className="tag mb-4 text-xs tracking-widest uppercase">About</p>
+              <h2 className="heading-lg mb-6">
+                Turning research into{' '}
+                <span className="gradient-text">real-world</span> AI
+              </h2>
+              <p className="text-white/45 max-w-2xl text-base leading-relaxed mb-16">
+                I transform complex AI research into scalable, production-ready systems.
+                From custom transformer models to intelligent chatbots and localized language models,
+                I deliver measurable business impact through thoughtful engineering.
+              </p>
+            </FadeSection>
+
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
+              {/* Left — Bio & Tech */}
+              <div className="space-y-8">
+                <FadeSection delay={0.1}>
+                  <div className="card-flat rounded-2xl p-6 md:p-8">
+                    <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-4">Profile</h3>
+                    <div className="space-y-3 text-sm text-white/50 leading-relaxed">
+                      <p><span className="text-white/80 font-medium">Role:</span> AI/ML Engineer</p>
+                      <p><span className="text-white/80 font-medium">Focus:</span> Neural Networks & Intelligent Systems</p>
+                      <p><span className="text-white/80 font-medium">Mission:</span> Building AI that pushes boundaries</p>
+                      <p><span className="text-white/80 font-medium">Location:</span> India</p>
+                    </div>
+                  </div>
+                </FadeSection>
+
+                <FadeSection delay={0.2}>
+                  <div className="card-flat rounded-2xl p-6 md:p-8">
+                    <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-5">Tech Stack</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {techStack.map((tech) => (
+                        <span key={tech} className="tag text-xs">{tech}</span>
+                      ))}
+                    </div>
+                  </div>
+                </FadeSection>
+              </div>
+
+              {/* Right — Skills bars */}
+              <FadeSection delay={0.3}>
+                <div className="card-flat rounded-2xl p-6 md:p-8">
+                  <div className="flex items-center gap-2.5 mb-6">
+                    <div className="status-dot" />
+                    <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Skill Proficiency</h3>
+                  </div>
+                  <div className="space-y-5">
+                    {skills.map((skill) => (
+                      <div key={skill.name}>
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm text-white/70">{skill.name}</span>
+                          <span className="text-xs font-mono text-white/35">{skill.level}%</span>
                         </div>
-                        <div className="w-full bg-gray-700 h-3 pixel-box">
+                        <div className="skill-bar">
                           <motion.div
-                            className={`h-full ${item.color}`}
+                            className="skill-bar-fill"
                             initial={{ width: 0 }}
-                            whileInView={{ width: `${item.level}%` }}
-                            transition={{ duration: 1, delay: 0.8 + index * 0.1 }}
+                            whileInView={{ width: `${skill.level}%` }}
+                            transition={{ duration: 1, delay: 0.3 }}
                             viewport={{ once: true }}
                           />
                         </div>
@@ -363,136 +243,128 @@ export default function Home() {
                     ))}
                   </div>
                 </div>
-              </motion.div>
-            </motion.div>
+              </FadeSection>
+            </div>
           </div>
         </section>
 
-      {/* Services Section removed */}
+        {/* ============================== */}
+        {/* Capabilities / What I Do       */}
+        {/* ============================== */}
+        <section id="skills" className="relative py-28 md:py-36 px-6 z-10">
+          <div className="max-w-6xl mx-auto">
+            <FadeSection>
+              <p className="tag mb-4 text-xs tracking-widest uppercase">Capabilities</p>
+              <h2 className="heading-lg mb-4">
+                What I <span className="gradient-text">Do</span>
+              </h2>
+              <p className="text-white/45 max-w-xl text-base leading-relaxed mb-16">
+                Specialized in building intelligent AI systems that solve real-world problems,
+                from transformer architectures to localized language models.
+              </p>
+            </FadeSection>
 
-      {/* Work Section */}
-      <WorkSection />
-
-      {/* Contact Section (CTA) */}
-      <section id="contact" className="relative py-24 px-6 z-10">
-        <motion.div
-          className="max-w-6xl mx-auto text-center"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-        >
-          <motion.div
-            className="mb-12"
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-2xl md:text-4xl font-bold mb-8 pixel-text-secondary">
-              Let’s build your next
-              <br />
-              <span className="gradient-text">AI-powered</span> project
-            </h2>
-            <div className="w-32 h-1 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-full mx-auto"></div>
-          </motion.div>
-          <motion.p
-            className="text-xl md:text-2xl text-white/80 mb-16 max-w-4xl mx-auto leading-relaxed"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            viewport={{ once: true }}
-          >
-            From concept to production, I help teams build intelligent systems that scale.
-            Tell me about your vision—I'll propose an approach and deliver results.
-          </motion.p>
-
-          <motion.div
-            className="grid md:grid-cols-3 gap-6 mb-12 justify-items-center"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            viewport={{ once: true }}
-          >
-            {[
-              { icon: "⚡", title: "FAST_DELIVERY", desc: "Rapid prototyping to production deployment" },
-              { icon: "🎯", title: "FOCUSED_SOLUTIONS", desc: "Tailored AI systems for your specific needs" },
-              { icon: "🚀", title: "SCALABLE_ARCH", desc: "Built for growth and performance" }
-            ].map((item, index) => (
-              <div key={item.title} className="pixel-card p-6 w-full max-w-sm">
-                <div className="text-2xl mb-4">{item.icon}</div>
-                <h3 className="text-sm font-bold mb-3 pixel-text-primary">{item.title}</h3>
-                <p className="text-xs text-white/80">{item.desc}</p>
-              </div>
-            ))}
-          </motion.div>
-          <motion.div
-            className="flex flex-col sm:flex-row gap-8 justify-center"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <motion.a
-              href="mailto:hey@mantis.works"
-              className="group glass-effect-strong px-10 py-5 rounded-full font-bold text-lg hover:scale-105 transition-all duration-300 shimmer"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <span className="gradient-text">Start a Project</span>
-            </motion.a>
-            <motion.a
-              href="#about"
-              className="px-10 py-5 border border-white/20 rounded-full font-bold text-lg hover:bg-white/10 hover:border-white/40 transition-all duration-300"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Learn More
-            </motion.a>
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* Footer */}
-      <footer className="relative py-16 px-6 z-10">
-        <motion.div
-          className="max-w-6xl mx-auto text-center"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <div className="pixel-card p-8 max-w-4xl mx-auto">
-            <div className="text-2xl font-bold mb-6 pixel-text-primary">WUKONG.EXE</div>
-            <p className="text-sm text-white/80 mb-6 leading-relaxed">
-              &gt; AI/ML DEVELOPER FOCUSED ON LLM APPLICATIONS, AGENTS, AND RAG SYSTEMS
-              <br />
-              &gt; BALANCING SPEED, ACCURACY, AND DELIGHTFUL USER EXPERIENCE
-            </p>
-            <div className="flex gap-4 justify-center mb-6">
-              <a href="https://github.com/vansh-visariya" target="_blank" rel="noopener noreferrer"
-                 className="pixel-btn text-xs">
-                [GITHUB]
-              </a>
-              <a href="https://linkedin.com/in/vansh-visariya" target="_blank" rel="noopener noreferrer"
-                 className="pixel-btn text-xs">
-                [LINKEDIN]
-              </a>
-              <a href="https://huggingface.co/vansh-myth" target="_blank" rel="noopener noreferrer"
-                 className="pixel-btn text-xs">
-                [HUGGINGFACE]
-              </a>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {abilities.map((ability, index) => (
+                <FadeSection key={ability.title} delay={index * 0.08}>
+                  <div className="card p-6 md:p-7 h-full group">
+                    <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-xl mb-5 group-hover:bg-indigo-500/10 group-hover:border-indigo-500/20 transition-all duration-300">
+                      {ability.icon}
+                    </div>
+                    <h3 className="font-semibold text-white/90 mb-2 group-hover:text-indigo-300 transition-colors duration-300">
+                      {ability.title}
+                    </h3>
+                    <p className="text-sm text-white/40 leading-relaxed">
+                      {ability.description}
+                    </p>
+                  </div>
+                </FadeSection>
+              ))}
             </div>
+          </div>
+        </section>
 
-            <div className="border-t-2 border-gray-600 pt-4">
-              <p className="text-xs pixel-text-accent">
-                © {new Date().getFullYear()} WUKONG.EXE - ALL RIGHTS RESERVED
+        {/* ============================== */}
+        {/* Featured Work                  */}
+        {/* ============================== */}
+        <WorkSection />
+
+        {/* ============================== */}
+        {/* Contact CTA                    */}
+        {/* ============================== */}
+        <section id="contact" className="relative py-28 md:py-36 px-6 z-10">
+          <div className="max-w-3xl mx-auto text-center">
+            <FadeSection>
+              <p className="tag mb-4 text-xs tracking-widest uppercase">Get in Touch</p>
+              <h2 className="heading-lg mb-6">
+                Let&apos;s build something{' '}
+                <span className="gradient-text">extraordinary</span>
+              </h2>
+              <p className="text-white/45 text-base leading-relaxed mb-10 max-w-xl mx-auto">
+                From concept to production, I help teams build intelligent systems that scale.
+                Tell me about your vision — I&apos;ll deliver results.
+              </p>
+            </FadeSection>
+
+            <FadeSection delay={0.2}>
+              <div className="grid sm:grid-cols-3 gap-4 mb-12">
+                {[
+                  { icon: '⚡', title: 'Fast Delivery', desc: 'Rapid prototyping to production' },
+                  { icon: '🎯', title: 'Focused Solutions', desc: 'Tailored AI for your needs' },
+                  { icon: '🚀', title: 'Scalable', desc: 'Built for growth & performance' },
+                ].map((item) => (
+                  <div key={item.title} className="card-flat rounded-2xl p-5 text-center">
+                    <div className="text-2xl mb-3">{item.icon}</div>
+                    <h3 className="text-sm font-semibold text-white/80 mb-1">{item.title}</h3>
+                    <p className="text-xs text-white/40">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </FadeSection>
+
+            <FadeSection delay={0.3}>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="mailto:hey@vansh.dev" className="btn-primary">
+                  <span>Start a Project</span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </a>
+                <a href="/contact" className="btn-outline">Contact Page</a>
+              </div>
+            </FadeSection>
+          </div>
+        </section>
+
+        {/* ============================== */}
+        {/* Footer                         */}
+        {/* ============================== */}
+        <footer className="relative py-12 px-6 z-10 border-t border-white/5">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div>
+                <span className="text-lg font-bold">
+                  <span className="gradient-text">V</span>
+                  <span className="text-white/80">ansh</span>
+                </span>
+                <p className="text-xs text-white/30 mt-1">AI/ML Engineer — Building intelligent systems</p>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <a href="https://github.com/vansh-visariya" target="_blank" rel="noopener noreferrer"
+                   className="btn-ghost text-xs">GitHub</a>
+                <a href="https://linkedin.com/in/vansh-visariya" target="_blank" rel="noopener noreferrer"
+                   className="btn-ghost text-xs">LinkedIn</a>
+                <a href="https://huggingface.co/vansh-myth" target="_blank" rel="noopener noreferrer"
+                   className="btn-ghost text-xs">HuggingFace</a>
+              </div>
+
+              <p className="text-xs text-white/20">
+                © {new Date().getFullYear()} Vansh. All rights reserved.
               </p>
             </div>
           </div>
-
-        </motion.div>
-      </footer>
+        </footer>
       </div>
     </>
   );

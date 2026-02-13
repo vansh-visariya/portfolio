@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 
 const Navigation = () => {
@@ -11,92 +10,113 @@ const Navigation = () => {
   const { scrollToElement } = useSmoothScroll();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const navItems = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Projects', href: '#work' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'About', href: '#about', isInternal: true },
+    { name: 'Work', href: '#work', isInternal: true },
+    { name: 'Skills', href: '#skills', isInternal: true },
+    { name: 'Blog', href: '/blog', isInternal: false },
+    { name: 'Contact', href: '/contact', isInternal: false },
   ];
 
-  const handleNavClick = (href: string) => {
-    scrollToElement(href);
+  const handleNavClick = (href: string, isInternal: boolean) => {
+    if (isInternal) {
+      scrollToElement(href);
+    } else {
+      window.location.href = href;
+    }
     setIsOpen(false);
   };
 
   return (
     <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className={`fixed top-20 left-0 right-0 z-40 transition-all duration-300 ${
-        scrolled ? 'pixel-box' : 'pixel-box'
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        scrolled ? 'glass-strong' : ''
       }`}
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mx-4">
+      <div className="max-w-6xl mx-auto px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="pixel-text-primary font-bold text-lg"
+          <a
+            href="#"
+            onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            className="text-lg font-bold tracking-tight hover:opacity-80 transition-opacity"
           >
-            WUKONG.EXE
-          </motion.div>
+            <span className="gradient-text">V</span>
+            <span className="text-white/90">ansh</span>
+          </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
-            {navItems.map((item, index) => (
-              <motion.button
+          <div className="hidden md:flex items-center gap-1">
+            {navItems.map((item) => (
+              <button
                 key={item.name}
-                onClick={() => handleNavClick(item.href)}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 + index * 0.1 }}
-                className="pixel-btn text-xs"
+                onClick={() => handleNavClick(item.href, item.isInternal)}
+                className="btn-ghost text-sm"
               >
-                [{item.name.toUpperCase()}]
-              </motion.button>
+                {item.name}
+              </button>
             ))}
+            <div className="w-px h-6 bg-white/10 mx-2" />
+            <a href="mailto:hey@vansh.dev" className="btn-primary text-sm !py-2 !px-4">
+              <span>Let&apos;s Talk</span>
+            </a>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="pixel-btn text-xs"
-            >
-              {isOpen ? '[X]' : '[MENU]'}
-            </button>
-          </div>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden p-2 text-white/70 hover:text-white transition-colors"
+            aria-label="Toggle menu"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              {isOpen ? (
+                <path d="M18 6L6 18M6 6l12 12" />
+              ) : (
+                <>
+                  <path d="M4 8h16M4 16h16" />
+                </>
+              )}
+            </svg>
+          </button>
         </div>
       </div>
 
       {/* Mobile Navigation */}
-      <motion.div
-        initial={false}
-        animate={{ height: isOpen ? 'auto' : 0 }}
-        className="md:hidden overflow-hidden glass-effect-strong"
-      >
-        <div className="px-6 py-6 space-y-4">
-          {navItems.map((item) => (
-            <button
-              key={item.name}
-              onClick={() => handleNavClick(item.href)}
-              className="block text-white/80 hover:text-white transition-colors duration-300 text-base font-medium w-full text-left py-2 px-4 rounded-lg hover:bg-white/10"
-            >
-              {item.name}
-            </button>
-          ))}
-        </div>
-      </motion.div>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden glass-strong overflow-hidden border-t border-white/5"
+          >
+            <div className="px-6 py-6 space-y-1">
+              {navItems.map((item) => (
+                <button
+                  key={item.name}
+                  onClick={() => handleNavClick(item.href, item.isInternal)}
+                  className="block w-full text-left py-3 px-4 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all text-sm"
+                >
+                  {item.name}
+                </button>
+              ))}
+              <div className="pt-3">
+                <a href="mailto:hey@vansh.dev" className="btn-primary w-full text-center text-sm !py-3">
+                  <span>Let&apos;s Talk</span>
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.nav>
   );
 };

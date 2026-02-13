@@ -15,64 +15,58 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(timer);
-          setTimeout(onComplete, 500);
+          setTimeout(onComplete, 300);
           return 100;
         }
-        return prev + 2;
+        return prev + 3;
       });
-    }, 50);
+    }, 30);
 
     return () => clearInterval(timer);
   }, [onComplete]);
 
   return (
     <motion.div
-      className="fixed inset-0 bg-black z-50 flex items-center justify-center"
+      className="fixed inset-0 z-[100] flex items-center justify-center"
+      style={{ background: '#050507' }}
       initial={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
+      exit={{ opacity: 0, scale: 1.1 }}
+      transition={{ duration: 0.6, ease: 'easeInOut' }}
     >
       <div className="text-center">
         <motion.div
-          className="text-4xl md:text-6xl font-bold pixel-text-glow mb-8"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
-          WUKONG.EXE
-        </motion.div>
-        
-        <motion.div
-          className="w-64 h-2 glass-effect rounded-full mx-auto mb-4 border border-white/10"
-          initial={{ opacity: 0, y: 20 }}
+          className="text-3xl md:text-4xl font-bold mb-8"
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
+          transition={{ duration: 0.6 }}
         >
-          <motion.div
-            className="h-full bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-full"
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.1 }}
-          />
-        </motion.div>
-        
-        <motion.div
-          className="text-indigo-300 text-sm font-medium font-mono"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-        >
-          {progress}%
+          <span className="gradient-text">Vansh</span>
         </motion.div>
 
         <motion.div
-          className="text-white/60 text-xs mt-2 tracking-wider"
+          className="w-48 h-[2px] bg-white/5 rounded-full mx-auto mb-4 overflow-hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
         >
-          Initializing AI Experience...
+          <motion.div
+            className="h-full rounded-full"
+            style={{
+              background: 'linear-gradient(90deg, #6366f1, #8b5cf6, #06b6d4)',
+              width: `${progress}%`,
+            }}
+            transition={{ duration: 0.1 }}
+          />
         </motion.div>
+
+        <motion.p
+          className="text-xs text-white/30 font-mono tracking-wider"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.4 }}
+        >
+          {progress < 100 ? 'Loading...' : 'Ready'}
+        </motion.p>
       </div>
     </motion.div>
   );

@@ -1,13 +1,12 @@
 'use client';
 
-import { Suspense, useRef, useEffect, useState } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Environment, Float, Line, Sphere } from '@react-three/drei';
+import { Suspense, useRef, useEffect, useState, useMemo } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Float, Line } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 
-// Neural Network Node Component
-function NeuralNode({ position, size = 0.05, color = "#00ff88", intensity = 0.5 }: {
+function NeuralNode({ position, size = 0.04, color = "#6366f1", intensity = 0.4 }: {
   position: [number, number, number];
   size?: number;
   color?: string;
@@ -16,16 +15,16 @@ function NeuralNode({ position, size = 0.05, color = "#00ff88", intensity = 0.5 
   const meshRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
-    if (meshRef.current && meshRef.current.material) {
+    if (meshRef.current?.material) {
       const time = state.clock.elapsedTime;
-      const material = meshRef.current.material as THREE.MeshStandardMaterial;
-      material.emissiveIntensity = intensity + Math.sin(time * 2 + position[0]) * 0.3;
+      const mat = meshRef.current.material as THREE.MeshStandardMaterial;
+      mat.emissiveIntensity = intensity + Math.sin(time * 1.5 + position[0] * 2) * 0.2;
     }
   });
 
   return (
     <mesh ref={meshRef} position={position}>
-      <sphereGeometry args={[size, 16, 16]} />
+      <sphereGeometry args={[size, 12, 12]} />
       <meshStandardMaterial
         color={color}
         emissive={color}
@@ -37,362 +36,202 @@ function NeuralNode({ position, size = 0.05, color = "#00ff88", intensity = 0.5 
   );
 }
 
-// Neural Connection Component
-function NeuralConnection({ start, end, opacity = 0.3 }: {
+function NeuralConnection({ start, end, opacity = 0.15 }: {
   start: [number, number, number];
   end: [number, number, number];
   opacity?: number;
 }) {
-  const lineRef = useRef<any>(null);
-
-  useFrame((state) => {
-    if (lineRef.current && lineRef.current.material) {
-      const time = state.clock.elapsedTime;
-      const material = lineRef.current.material as THREE.LineBasicMaterial;
-      material.opacity = opacity + Math.sin(time * 3) * 0.2;
-    }
-  });
-
   return (
     <Line
-      ref={lineRef}
       points={[start, end]}
-      color="#00ff88"
-      lineWidth={1}
+      color="#6366f1"
+      lineWidth={0.5}
       transparent
       opacity={opacity}
     />
   );
 }
 
-// Advanced Neural Network Structure
-function NeuralNetworkStructure({ scrollProgress }: { scrollProgress: number }) {
+function NeuralNetwork({ scrollProgress }: { scrollProgress: number }) {
   const groupRef = useRef<THREE.Group>(null);
-  const coreRef = useRef<THREE.Group>(null);
-  const [nodes, setNodes] = useState<Array<{ position: [number, number, number], layer: number, id: number }>>([]);
-  const [connections, setConnections] = useState<Array<{ start: [number, number, number], end: [number, number, number], strength: number }>>([]);
 
-  useEffect(() => {
-    // Generate more sophisticated neural network structure
-    const newNodes: Array<{ position: [number, number, number], layer: number, id: number }> = [];
-    const newConnections: Array<{ start: [number, number, number], end: [number, number, number], strength: number }> = [];
+  const { nodes, connections } = useMemo(() => {
+    const newNodes: Array<{ position: [number, number, number]; layer: number }> = [];
+    const newConnections: Array<{ start: [number, number, number]; end: [number, number, number]; strength: number }> = [];
 
-    // Create multiple interconnected layers with varying densities
-    const layers = 7;
-    const nodesPerLayer = [6, 10, 16, 20, 16, 10, 6];
-    const layerRadii = [1.5, 2.2, 3.0, 3.5, 3.0, 2.2, 1.5];
-
-    let nodeId = 0;
+    const layers = 5;
+    const nodesPerLayer = [5, 8, 12, 8, 5];
+    const layerRadii = [1.8, 2.5, 3.2, 2.5, 1.8];
 
     for (let layer = 0; layer < layers; layer++) {
-      const layerNodes = nodesPerLayer[layer];
+      const count = nodesPerLayer[layer];
       const radius = layerRadii[layer];
-      const yOffset = (layer - 3) * 1.8; // Center around y=0
+      const yOffset = (layer - 2) * 2;
 
-      for (let node = 0; node < layerNodes; node++) {
-        const angle = (node / layerNodes) * Math.PI * 2;
-        const spiralOffset = layer * 0.3; // Add spiral effect
-        const x = Math.cos(angle + spiralOffset) * radius;
-        const z = Math.sin(angle + spiralOffset) * radius;
-        const y = yOffset + Math.sin(angle * 3) * 0.3; // Add wave pattern
+      for (let n = 0; n < count; n++) {
+        const angle = (n / count) * Math.PI * 2;
+        const spiral = layer * 0.25;
+        const x = Math.cos(angle + spiral) * radius;
+        const z = Math.sin(angle + spiral) * radius;
+        const y = yOffset + Math.sin(angle * 2) * 0.3;
 
-        newNodes.push({ position: [x, y, z], layer, id: nodeId++ });
+        newNodes.push({ position: [x, y, z], layer });
 
-        // Connect to next layer with varying connection strengths
         if (layer < layers - 1) {
-          const nextLayerNodes = nodesPerLayer[layer + 1];
+          const nextCount = nodesPerLayer[layer + 1];
           const nextRadius = layerRadii[layer + 1];
-          const nextYOffset = (layer + 1 - 3) * 1.8;
-          const nextSpiralOffset = (layer + 1) * 0.3;
+          const nextY = (layer + 1 - 2) * 2;
+          const nextSpiral = (layer + 1) * 0.25;
 
-          for (let nextNode = 0; nextNode < nextLayerNodes; nextNode++) {
-            const connectionProbability = 0.4 + Math.random() * 0.4; // 40-80% connection probability
-            if (Math.random() < connectionProbability) {
-              const nextAngle = (nextNode / nextLayerNodes) * Math.PI * 2;
-              const nextX = Math.cos(nextAngle + nextSpiralOffset) * nextRadius;
-              const nextZ = Math.sin(nextAngle + nextSpiralOffset) * nextRadius;
-              const nextY = nextYOffset + Math.sin(nextAngle * 3) * 0.3;
-
-              const distance = Math.sqrt(
-                Math.pow(nextX - x, 2) + Math.pow(nextY - y, 2) + Math.pow(nextZ - z, 2)
-              );
-              const strength = Math.max(0.1, 1 - distance / 8); // Connection strength based on distance
-
+          for (let nn = 0; nn < nextCount; nn++) {
+            if (Math.random() < 0.35) {
+              const nextAngle = (nn / nextCount) * Math.PI * 2;
+              const nx = Math.cos(nextAngle + nextSpiral) * nextRadius;
+              const nz = Math.sin(nextAngle + nextSpiral) * nextRadius;
+              const ny = nextY + Math.sin(nextAngle * 2) * 0.3;
+              const dist = Math.sqrt((nx - x) ** 2 + (ny - y) ** 2 + (nz - z) ** 2);
               newConnections.push({
                 start: [x, y, z],
-                end: [nextX, nextY, nextZ],
-                strength
+                end: [nx, ny, nz],
+                strength: Math.max(0.1, 1 - dist / 8),
               });
             }
           }
         }
-
-        // Add some cross-layer connections for complexity
-        if (layer < layers - 2 && Math.random() > 0.8) {
-          const targetLayer = layer + 2;
-          const targetLayerNodes = nodesPerLayer[targetLayer];
-          const targetRadius = layerRadii[targetLayer];
-          const targetYOffset = (targetLayer - 3) * 1.8;
-          const targetSpiralOffset = targetLayer * 0.3;
-
-          const targetNode = Math.floor(Math.random() * targetLayerNodes);
-          const targetAngle = (targetNode / targetLayerNodes) * Math.PI * 2;
-          const targetX = Math.cos(targetAngle + targetSpiralOffset) * targetRadius;
-          const targetZ = Math.sin(targetAngle + targetSpiralOffset) * targetRadius;
-          const targetY = targetYOffset + Math.sin(targetAngle * 3) * 0.3;
-
-          newConnections.push({
-            start: [x, y, z],
-            end: [targetX, targetY, targetZ],
-            strength: 0.3
-          });
-        }
       }
     }
 
-    setNodes(newNodes);
-    setConnections(newConnections);
+    return { nodes: newNodes, connections: newConnections };
   }, []);
 
   useFrame((state) => {
     if (groupRef.current) {
-      const time = state.clock.elapsedTime;
-
-      // Complex rotation based on scroll and time
-      groupRef.current.rotation.y = scrollProgress * Math.PI * 4 + time * 0.08;
-      groupRef.current.rotation.x = Math.sin(time * 0.2) * 0.15 + scrollProgress * 0.3;
-      groupRef.current.rotation.z = Math.cos(time * 0.15) * 0.1;
-
-      // Dynamic scale with breathing effect
-      const breathe = Math.sin(time * 0.5) * 0.1;
-      const scale = 0.8 + scrollProgress * 0.6 + breathe;
+      const t = state.clock.elapsedTime;
+      groupRef.current.rotation.y = scrollProgress * Math.PI * 2 + t * 0.06;
+      groupRef.current.rotation.x = Math.sin(t * 0.15) * 0.1;
+      const breathe = Math.sin(t * 0.4) * 0.05;
+      const scale = 0.7 + scrollProgress * 0.3 + breathe;
       groupRef.current.scale.setScalar(scale);
-    }
-
-    if (coreRef.current) {
-      const time = state.clock.elapsedTime;
-      coreRef.current.rotation.x = time * 0.3;
-      coreRef.current.rotation.y = time * 0.2;
-      coreRef.current.rotation.z = time * 0.1;
     }
   });
 
   return (
     <group ref={groupRef}>
-      {/* Render connections with varying strengths */}
-      {connections.map((connection, index) => (
-        <NeuralConnection
-          key={`connection-${index}`}
-          start={connection.start}
-          end={connection.end}
-          opacity={0.1 + connection.strength * 0.4 + scrollProgress * 0.3}
-        />
+      {connections.map((c, i) => (
+        <NeuralConnection key={i} start={c.start} end={c.end} opacity={0.06 + c.strength * 0.15} />
       ))}
-
-      {/* Render nodes with layer-based sizing */}
-      {nodes.map((node, index) => {
-        const layerIntensity = 0.3 + (node.layer / 6) * 0.4;
-        const size = 0.03 + (node.layer === 3 ? 0.04 : 0.02); // Larger nodes in center layer
+      {nodes.map((n, i) => {
+        const isCenter = n.layer === 2;
         return (
           <NeuralNode
-            key={`node-${index}`}
-            position={node.position}
-            size={size}
-            intensity={layerIntensity + scrollProgress * 0.5}
-            color={node.layer === 3 ? "#00ff88" : "#0088ff"}
+            key={i}
+            position={n.position}
+            size={isCenter ? 0.06 : 0.035}
+            intensity={0.2 + (n.layer / 4) * 0.3 + scrollProgress * 0.3}
+            color={isCenter ? "#8b5cf6" : "#6366f1"}
           />
         );
       })}
 
-      {/* Enhanced central core with multiple geometries */}
-      <group ref={coreRef}>
-        <Float speed={1.5} rotationIntensity={0.4} floatIntensity={0.2}>
-          {/* Main core */}
-          <mesh position={[0, 0, 0]}>
-            <dodecahedronGeometry args={[0.6, 1]} />
-            <meshStandardMaterial
-              color="#00ff88"
-              emissive="#00ff88"
-              emissiveIntensity={0.5 + scrollProgress * 0.8}
-              metalness={0.9}
-              roughness={0.1}
-              wireframe={false}
-            />
-          </mesh>
-
-          {/* Wireframe overlay */}
-          <mesh position={[0, 0, 0]}>
-            <dodecahedronGeometry args={[0.65, 1]} />
-            <meshBasicMaterial
-              color="#00ff88"
-              wireframe={true}
-              transparent={true}
-              opacity={0.6 + scrollProgress * 0.4}
-            />
-          </mesh>
-
-          {/* Inner rotating sphere */}
-          <mesh position={[0, 0, 0]}>
-            <sphereGeometry args={[0.4, 32, 32]} />
-            <meshStandardMaterial
-              color="#0088ff"
-              emissive="#0088ff"
-              emissiveIntensity={0.3 + scrollProgress * 0.5}
-              metalness={0.8}
-              roughness={0.2}
-              transparent={true}
-              opacity={0.7}
-            />
-          </mesh>
-        </Float>
-
-        {/* Orbiting elements */}
-        {[...Array(6)].map((_, i) => (
-          <Float key={i} speed={2 + i * 0.3} rotationIntensity={0.5} floatIntensity={0.3}>
-            <mesh
-              position={[
-                Math.cos((i / 6) * Math.PI * 2) * 1.2,
-                Math.sin((i / 3) * Math.PI) * 0.4,
-                Math.sin((i / 6) * Math.PI * 2) * 1.2,
-              ]}
-            >
-              <octahedronGeometry args={[0.08, 0]} />
-              <meshStandardMaterial
-                color="#ffffff"
-                emissive="#00ff88"
-                emissiveIntensity={0.6 + scrollProgress * 0.4}
-                metalness={0.9}
-                roughness={0.1}
-              />
-            </mesh>
-          </Float>
-        ))}
-      </group>
+      <Float speed={1.2} rotationIntensity={0.3} floatIntensity={0.15}>
+        <mesh position={[0, 0, 0]}>
+          <dodecahedronGeometry args={[0.5, 1]} />
+          <meshStandardMaterial
+            color="#6366f1"
+            emissive="#6366f1"
+            emissiveIntensity={0.3 + scrollProgress * 0.5}
+            metalness={0.9}
+            roughness={0.1}
+            wireframe
+            transparent
+            opacity={0.4}
+          />
+        </mesh>
+        <mesh position={[0, 0, 0]}>
+          <sphereGeometry args={[0.3, 24, 24]} />
+          <meshStandardMaterial
+            color="#8b5cf6"
+            emissive="#8b5cf6"
+            emissiveIntensity={0.2 + scrollProgress * 0.4}
+            metalness={0.8}
+            roughness={0.2}
+            transparent
+            opacity={0.5}
+          />
+        </mesh>
+      </Float>
     </group>
   );
 }
 
-// Particle System Component
-function ParticleSystem({ count = 100 }: { count?: number }) {
+function Particles({ count = 80 }: { count?: number }) {
   const pointsRef = useRef<THREE.Points>(null);
-  const positions = new Float32Array(count * 3);
-
-  // Initialize random positions
-  for (let i = 0; i < count * 3; i += 3) {
-    positions[i] = (Math.random() - 0.5) * 20;     // x
-    positions[i + 1] = (Math.random() - 0.5) * 20; // y
-    positions[i + 2] = (Math.random() - 0.5) * 20; // z
-  }
+  const positions = useMemo(() => {
+    const arr = new Float32Array(count * 3);
+    for (let i = 0; i < count * 3; i += 3) {
+      arr[i] = (Math.random() - 0.5) * 18;
+      arr[i + 1] = (Math.random() - 0.5) * 18;
+      arr[i + 2] = (Math.random() - 0.5) * 18;
+    }
+    return arr;
+  }, [count]);
 
   useFrame((state) => {
     if (pointsRef.current) {
-      const time = state.clock.elapsedTime;
-      pointsRef.current.rotation.y = time * 0.05;
-
-      // Animate particles
-      const positions = pointsRef.current.geometry.attributes.position.array as Float32Array;
-      for (let i = 0; i < positions.length; i += 3) {
-        positions[i + 1] += Math.sin(time + positions[i]) * 0.001;
-      }
-      pointsRef.current.geometry.attributes.position.needsUpdate = true;
+      pointsRef.current.rotation.y = state.clock.elapsedTime * 0.03;
     }
   });
 
   return (
     <points ref={pointsRef}>
       <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={count}
-          array={positions}
-          itemSize={3}
-          args={[positions, 3]}
-        />
+        <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial
-        size={0.02}
-        color="#00ff88"
-        transparent
-        opacity={0.6}
-        sizeAttenuation
-      />
+      <pointsMaterial size={0.015} color="#6366f1" transparent opacity={0.4} sizeAttenuation />
     </points>
   );
 }
 
-// Main Scene Component
 const Scene3D = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrolled = window.scrollY;
       const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
-      const progress = Math.min(scrolled / (maxScroll * 0.5), 1); // More responsive to early scroll
-      setScrollProgress(progress);
+      setScrollProgress(Math.min(window.scrollY / (maxScroll * 0.5), 1));
     };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial call
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <div className="fixed inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
-      {/* Subtle vignette to improve text readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/50" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#050507]/30 to-[#050507]/80" />
 
       <Canvas
-        camera={{ position: [0, 0, 12], fov: 50 }}
-        gl={{
-          antialias: true,
-          alpha: true,
-          powerPreference: "high-performance"
-        }}
+        camera={{ position: [0, 0, 10], fov: 50 }}
+        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         className="bg-transparent"
       >
         <Suspense fallback={null}>
-          {/* Enhanced Lighting */}
-          <ambientLight intensity={0.2} />
-          <directionalLight position={[10, 10, 5]} intensity={0.8} color="#ffffff" />
-          <pointLight position={[-10, -10, -10]} intensity={0.6} color="#00ff88" />
-          <pointLight position={[10, -10, 10]} intensity={0.4} color="#0088ff" />
-          <spotLight
-            position={[0, 10, 0]}
-            angle={0.3}
-            penumbra={1}
-            intensity={0.5}
-            color="#00ff88"
-          />
-
-          {/* Environment */}
-          <Environment preset="night" />
-
-          {/* Fog for depth */}
-          <fog attach="fog" args={['#000000', 6, 22]} />
-
-          {/* 3D Objects */}
-          <NeuralNetworkStructure scrollProgress={scrollProgress} />
-          <ParticleSystem count={220} />
-
-          {/* Controls - disabled for better performance */}
-          <OrbitControls
-            enablePan={false}
-            enableZoom={false}
-            enableRotate={false}
-            autoRotate={false}
-          />
+          <ambientLight intensity={0.15} />
+          <directionalLight position={[10, 10, 5]} intensity={0.4} color="#ffffff" />
+          <pointLight position={[-10, -10, -10]} intensity={0.3} color="#6366f1" />
+          <pointLight position={[10, -10, 10]} intensity={0.2} color="#06b6d4" />
+          <fog attach="fog" args={['#050507', 8, 22]} />
+          <NeuralNetwork scrollProgress={scrollProgress} />
+          <Particles count={100} />
         </Suspense>
       </Canvas>
 
-      {/* Minimal UI elements only (no large center text to avoid overlap) */}
-
-      {/* Progress indicator */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-black/20 z-10">
+      {/* Progress bar */}
+      <div className="absolute top-0 left-0 w-full h-[1px] bg-white/5 z-10">
         <motion.div
-          className="h-full bg-gradient-to-r from-green-400 to-blue-400"
-          style={{ width: `${scrollProgress * 100}%` }}
-          transition={{ duration: 0.1 }}
+          className="h-full"
+          style={{
+            background: 'linear-gradient(90deg, #6366f1, #06b6d4)',
+            width: `${scrollProgress * 100}%`,
+          }}
         />
       </div>
     </div>

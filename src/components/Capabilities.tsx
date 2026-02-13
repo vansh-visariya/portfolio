@@ -1,64 +1,42 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
 
 const groups = [
   {
-    title: 'Experiential',
-    href: '/services',
-    items: [
-      'Architecture',
-      'Spatial & Interior Design',
-      'Interactive / Creative Technology',
-      'Event Production',
-      'Projection Mapping',
-      'Reactive Environments'
-    ],
-    color: 'from-emerald-500/10 to-cyan-500/10'
+    title: 'AI/ML Engineering',
+    items: ['Transformer Architectures', 'LLM Fine-tuning', 'RAG Systems', 'Neural Networks', 'Model Optimization', 'MLOps'],
   },
   {
-    title: 'Digital',
-    href: '/services',
-    items: [
-      '3D Modelling',
-      'Motion & Animation',
-      'User Experience / Interface',
-      'Development',
-      'WebGL',
-      'Performance & Analytics'
-    ],
-    color: 'from-indigo-500/10 to-fuchsia-500/10'
+    title: 'Development',
+    items: ['Python / PyTorch', 'LangChain / LangGraph', 'Vector Databases', 'API Design', 'Streamlit / Gradio', 'Full-stack Apps'],
   },
   {
-    title: 'Brand',
-    href: '/services',
-    items: [
-      'Brand & Campaign Strategy',
-      'Identity',
-      'Content Production',
-      'OOH',
-      'Copywriting & Messaging',
-      'Design Systems'
-    ],
-    color: 'from-rose-500/10 to-amber-500/10'
-  }
+    title: 'Research',
+    items: ['NLP / NLU', 'Attention Mechanisms', 'Cultural AI Models', 'Evaluation Frameworks', 'Dataset Curation', 'AI Safety'],
+  },
 ];
 
 const Capabilities = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
+
   return (
-    <section id="capabilities" className="relative px-6 py-28 z-10">
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
-      <div className="relative max-w-7xl mx-auto">
+    <section id="capabilities" ref={ref} className="relative py-28 md:py-36 px-6 z-10">
+      <div className="max-w-6xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-14"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7 }}
+          className="mb-16"
         >
-          <h2 className="text-5xl md:text-7xl font-bold tracking-tight">Services</h2>
-          <p className="mt-4 text-lg text-white/70 max-w-3xl">
-            Small teams, big ideas. We tailor the right mix of experiential, digital, and brand services to your project.
+          <p className="tag mb-4 text-xs tracking-widest uppercase">Expertise</p>
+          <h2 className="heading-lg mb-4">
+            Areas of <span className="gradient-text">expertise</span>
+          </h2>
+          <p className="text-white/45 max-w-xl text-base leading-relaxed">
+            Deep knowledge across AI/ML engineering, development, and research.
           </p>
         </motion.div>
 
@@ -67,34 +45,19 @@ const Capabilities = () => {
             <motion.div
               key={g.title}
               initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: i * 0.1 }}
-              viewport={{ once: true }}
-              className={`relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br ${g.color} backdrop-blur-sm`}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+              className="card-flat rounded-2xl p-6 md:p-8"
             >
-              <div className="p-8">
-                <div className="flex items-baseline justify-between">
-                  <h3 className="text-2xl font-semibold">{g.title}</h3>
-                  <span className="text-xs text-white/50">/ services</span>
-                </div>
-                <ul className="mt-6 space-y-3 text-white/80 text-sm">
-                  {g.items.map((item) => (
-                    <li key={item} className="flex items-center">
-                      <span className="mr-2 h-1.5 w-1.5 rounded-full bg-white/50" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <a
-                  href={g.href}
-                  className="mt-8 inline-flex items-center text-white/80 hover:text-white transition-colors text-sm"
-                >
-                  Explore
-                  <svg className="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </a>
-              </div>
+              <h3 className="text-lg font-semibold text-white/90 mb-6">{g.title}</h3>
+              <ul className="space-y-3">
+                {g.items.map((item) => (
+                  <li key={item} className="flex items-center gap-2.5 text-sm text-white/50">
+                    <div className="w-1 h-1 rounded-full bg-indigo-400/60" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </motion.div>
           ))}
         </div>
@@ -104,5 +67,3 @@ const Capabilities = () => {
 };
 
 export default Capabilities;
-
-

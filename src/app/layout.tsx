@@ -1,20 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "Wukong - AI/ML Developer",
-  description: "Building intelligent systems with cutting-edge AI and machine learning. Specializing in transformer models, natural language processing, and custom AI solutions.",
+  title: "Vansh — AI/ML Engineer",
+  description: "Building intelligent systems with cutting-edge AI and machine learning. Specializing in transformer models, LLM applications, RAG systems, and custom AI solutions.",
+  icons: {
+    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>",
+  },
 };
 
 export default function RootLayout({
@@ -24,9 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className="noise-bg">
         {children}
       </body>
     </html>

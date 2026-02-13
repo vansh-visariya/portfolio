@@ -1,7 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 
 interface Project {
@@ -9,11 +8,11 @@ interface Project {
   title: string;
   category: string;
   description: string;
-  image: string;
-  color: string;
+  emoji: string;
   tags: string[];
   github: string;
   features: string[];
+  gradient: string;
 }
 
 const projects: Project[] = [
@@ -21,162 +20,145 @@ const projects: Project[] = [
     id: 1,
     title: "Kaito-AI",
     category: "AI Chatbot Platform",
-    description: "Intelligent search & document analysis chatbot with RAG capabilities, web search integration, and multi-threading conversation management.",
-    image: "🤖",
-    color: "from-indigo-500/20 to-purple-500/20",
+    description: "Intelligent search & document analysis chatbot with RAG capabilities, web search integration, and multi-threaded conversations.",
+    emoji: "🤖",
     tags: ["LangGraph", "RAG", "Streamlit", "Groq"],
     github: "https://github.com/vansh-visariya/kaito-ai",
-    features: ["Web Search Mode", "Document Analysis", "Chat History", "Vector Search"]
+    features: ["Web Search Mode", "Document Analysis", "Chat History", "Vector Search"],
+    gradient: "from-indigo-500/10 to-violet-500/10",
   },
   {
     id: 2,
     title: "BhiduAI",
     category: "Localized LLM",
     description: "Cultural language model fine-tuned with Mumbai Bambaiyya slang, mixing Hindi, English, and local street language for authentic conversations.",
-    image: "💬",
-    color: "from-emerald-500/20 to-cyan-500/20",
+    emoji: "💬",
     tags: ["LoRA", "Fine-tuning", "Gemma-2", "Cultural AI"],
     github: "https://github.com/vansh-visariya/BhiduAI",
-    features: ["Mumbai Slang", "Cultural Nuances", "Localized Responses", "3000+ Dataset"]
+    features: ["Mumbai Slang", "Cultural Nuances", "Localized Responses", "3000+ Dataset"],
+    gradient: "from-cyan-500/10 to-blue-500/10",
   },
   {
     id: 3,
     title: "Kaito-Model",
-    category: "Transformer Implementation",
-    description: "Complete GPT-2 style transformer model built from scratch using PyTorch, demonstrating core concepts of self-attention and autoregressive generation.",
-    image: "🧠",
-    color: "from-violet-500/20 to-pink-500/20",
+    category: "Transformer from Scratch",
+    description: "Complete GPT-2 style transformer model built from scratch using PyTorch, demonstrating self-attention and autoregressive generation.",
+    emoji: "🧠",
     tags: ["PyTorch", "Transformer", "GPT-2", "From Scratch"],
     github: "https://github.com/vansh-visariya/kaito-model",
-    features: ["Multi-Head Attention", "Layer Normalization", "Text Generation", "Training Pipeline"]
-  }
+    features: ["Multi-Head Attention", "Layer Normalization", "Text Generation", "Training Pipeline"],
+    gradient: "from-violet-500/10 to-pink-500/10",
+  },
 ];
 
 const WorkSection = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [hoveredProject, setHoveredProject] = useState<number | null>(null);
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   return (
-    <section ref={ref} id="work" className="relative py-24 px-6 z-10">
+    <section ref={ref} id="work" className="relative py-28 md:py-36 px-6 z-10">
       <div className="max-w-6xl mx-auto">
+        {/* Section header */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7 }}
+          className="mb-16 md:mb-20"
         >
-          <motion.h2
-            className="text-2xl md:text-3xl font-bold mb-8 pixel-text-secondary"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
-            transition={{ duration: 1, delay: 0.2 }}
-          >
-            === PROJECT ARCHIVE ===
-          </motion.h2>
-          <motion.p
-            className="text-xl md:text-2xl text-white/80 max-w-4xl mx-auto leading-relaxed"
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            A showcase of my AI/ML projects, from intelligent chatbots to transformer models
-            built from scratch, demonstrating expertise in modern AI development.
-          </motion.p>
+          <p className="tag mb-4 text-xs tracking-widest uppercase">Featured Projects</p>
+          <h2 className="heading-lg mb-4">
+            Things I&apos;ve <span className="gradient-text">Built</span>
+          </h2>
+          <p className="text-white/50 max-w-xl text-base leading-relaxed">
+            A selection of AI/ML projects showcasing expertise in transformer architectures,
+            LLM applications, and intelligent systems.
+          </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-10 lg:gap-12 relative z-10 justify-items-center">
+        {/* Projects grid */}
+        <div className="grid lg:grid-cols-3 gap-6">
           {projects.map((project, index) => (
-            <motion.div
+            <motion.a
               key={project.id}
-              initial={{ opacity: 0, y: 50 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-              transition={{ duration: 0.8, delay: index * 0.2 }}
-              className="group cursor-pointer w-full max-w-sm"
-              onMouseEnter={() => setHoveredProject(project.id)}
-              onMouseLeave={() => setHoveredProject(null)}
-              onClick={() => window.open(project.github, '_blank')}
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 40 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: index * 0.15 }}
+              className="group block"
+              onMouseEnter={() => setHoveredId(project.id)}
+              onMouseLeave={() => setHoveredId(null)}
             >
-              <div className="pixel-card p-6 h-full group-hover:pixel-glow">
+              <div className={`card p-6 md:p-8 h-full relative overflow-hidden bg-gradient-to-br ${project.gradient}`}>
                 {/* Header */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="pixel-box-primary w-12 h-12 flex items-center justify-center">
-                    <span className="text-xl text-black">{project.image}</span>
+                <div className="flex items-start justify-between mb-6">
+                  <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-2xl">
+                    {project.emoji}
                   </div>
-                  <div className="pixel-box px-2 py-1">
-                    <span className="text-xs pixel-text-accent">{project.category.toUpperCase()}</span>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div>
-                  <h3 className="text-lg font-bold mb-3 pixel-text-primary">
-                    {project.title.toUpperCase()}.EXE
-                  </h3>
-
-                  <p className="text-xs text-white/80 leading-relaxed mb-4">
-                    &gt; {project.description}
-                  </p>
-
-                  {/* Key Features */}
-                  <div className="mb-4">
-                    <h4 className="text-xs font-bold pixel-text-secondary mb-2">
-                      FEATURES.LOG:
-                    </h4>
-                    <ul className="text-xs text-white/70 space-y-1">
-                      {project.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-center">
-                          <span className="pixel-text-accent mr-2">•</span>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Tech Stack */}
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-xs pixel-box-secondary px-2 py-1 text-black font-bold"
-                      >
-                        {tag.toUpperCase()}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* GitHub Link */}
-                  <motion.div
-                    className="pixel-btn text-xs"
-                    initial={{ opacity: 0 }}
-                    animate={hoveredProject === project.id ? { opacity: 1 } : { opacity: 0.7 }}
-                    transition={{ duration: 0.3 }}
+                  <svg
+                    className={`w-5 h-5 text-white/20 transition-all duration-300 ${hoveredId === project.id ? 'text-white/60 translate-x-1 -translate-y-1' : ''}`}
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
                   >
-                    [VIEW_SOURCE]
-                  </motion.div>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 17L17 7M17 7H7M17 7v10" />
+                  </svg>
                 </div>
 
+                {/* Category */}
+                <p className="text-xs text-white/40 font-mono tracking-wider uppercase mb-2">
+                  {project.category}
+                </p>
 
+                {/* Title */}
+                <h3 className="text-xl font-semibold mb-3 text-white group-hover:text-indigo-300 transition-colors duration-300">
+                  {project.title}
+                </h3>
+
+                {/* Description */}
+                <p className="text-sm text-white/50 leading-relaxed mb-6">
+                  {project.description}
+                </p>
+
+                {/* Features */}
+                <div className="space-y-2 mb-6">
+                  {project.features.map((feature) => (
+                    <div key={feature} className="flex items-center gap-2 text-sm text-white/40">
+                      <div className="w-1 h-1 rounded-full bg-indigo-400/60" />
+                      {feature}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-2 mt-auto">
+                  {project.tags.map((tag) => (
+                    <span key={tag} className="tag text-xs">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </motion.div>
+            </motion.a>
           ))}
         </div>
 
+        {/* View all */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-center mt-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="text-center mt-14"
         >
           <a
             href="https://github.com/vansh-visariya"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center glass-effect-strong px-8 py-4 border border-white/20 text-white font-semibold rounded-full hover:bg-white/10 hover:border-white/40 transition-all duration-300 shimmer"
+            className="btn-outline"
           >
-            <span className="gradient-text">View All Projects</span>
-            <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            View All on GitHub
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </a>
         </motion.div>
