@@ -2,54 +2,7 @@
 
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
-
-interface Project {
-  id: number;
-  title: string;
-  category: string;
-  description: string;
-  emoji: string;
-  tags: string[];
-  github: string;
-  features: string[];
-  gradient: string;
-}
-
-const projects: Project[] = [
-  {
-    id: 1,
-    title: "Kaito-AI",
-    category: "AI Chatbot Platform",
-    description: "Intelligent search & document analysis chatbot with RAG capabilities, web search integration, and multi-threaded conversations.",
-    emoji: "🤖",
-    tags: ["LangGraph", "RAG", "Streamlit", "Groq"],
-    github: "https://github.com/vansh-visariya/kaito-ai",
-    features: ["Web Search Mode", "Document Analysis", "Chat History", "Vector Search"],
-    gradient: "from-indigo-500/10 to-violet-500/10",
-  },
-  {
-    id: 2,
-    title: "BhiduAI",
-    category: "Localized LLM",
-    description: "Cultural language model fine-tuned with Mumbai Bambaiyya slang, mixing Hindi, English, and local street language for authentic conversations.",
-    emoji: "💬",
-    tags: ["LoRA", "Fine-tuning", "Gemma-2", "Cultural AI"],
-    github: "https://github.com/vansh-visariya/BhiduAI",
-    features: ["Mumbai Slang", "Cultural Nuances", "Localized Responses", "3000+ Dataset"],
-    gradient: "from-cyan-500/10 to-blue-500/10",
-  },
-  {
-    id: 3,
-    title: "Kaito-Model",
-    category: "Transformer from Scratch",
-    description: "Complete GPT-2 style transformer model built from scratch using PyTorch, demonstrating self-attention and autoregressive generation.",
-    emoji: "🧠",
-    tags: ["PyTorch", "Transformer", "GPT-2", "From Scratch"],
-    github: "https://github.com/vansh-visariya/kaito-model",
-    features: ["Multi-Head Attention", "Layer Normalization", "Text Generation", "Training Pipeline"],
-    gradient: "from-violet-500/10 to-pink-500/10",
-  },
-];
+import { projects } from '@/content/projects';
 
 const WorkSection = () => {
   const ref = useRef(null);
@@ -64,13 +17,13 @@ const WorkSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
-          className="mb-16 md:mb-20"
+          className="mb-16 md:mb-20 text-center"
         >
           <p className="tag mb-4 text-xs tracking-widest uppercase">Featured Projects</p>
           <h2 className="heading-lg mb-4">
             Things I&apos;ve <span className="gradient-text">Built</span>
           </h2>
-          <p className="text-white/50 max-w-xl text-base leading-relaxed">
+          <p className="text-white/50 max-w-xl mx-auto text-base leading-relaxed">
             A selection of AI/ML projects showcasing expertise in transformer architectures,
             LLM applications, and intelligent systems.
           </p>
@@ -111,7 +64,7 @@ const WorkSection = () => {
                 </p>
 
                 {/* Title */}
-                <h3 className="text-xl font-semibold mb-3 text-white group-hover:text-indigo-300 transition-colors duration-300">
+                <h3 className="text-xl font-semibold mb-3 text-white group-hover:text-white transition-colors duration-300">
                   {project.title}
                 </h3>
 
@@ -124,7 +77,7 @@ const WorkSection = () => {
                 <div className="space-y-2 mb-6">
                   {project.features.map((feature) => (
                     <div key={feature} className="flex items-center gap-2 text-sm text-white/40">
-                      <div className="w-1 h-1 rounded-full bg-indigo-400/60" />
+                      <div className="w-1 h-1 rounded-full bg-white/60" />
                       {feature}
                     </div>
                   ))}

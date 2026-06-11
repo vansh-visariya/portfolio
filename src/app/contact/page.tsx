@@ -46,8 +46,8 @@ export default function ContactPage() {
       {/* Background */}
       <div className="fixed inset-0 grid-bg pointer-events-none" />
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-500/[0.04] blur-[120px]" />
-        <div className="absolute bottom-[-20%] left-[-10%] w-[400px] h-[400px] rounded-full bg-violet-500/[0.03] blur-[100px]" />
+        <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-white/[0.02] blur-[120px]" />
+        <div className="absolute bottom-[-20%] left-[-10%] w-[400px] h-[400px] rounded-full bg-white/[0.02] blur-[100px]" />
       </div>
 
       <Navigation />
@@ -146,7 +146,7 @@ export default function ContactPage() {
                     <motion.div
                       initial={{ opacity: 0, y: 5 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="text-center p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm"
+                      className="text-center p-3 rounded-lg bg-white/10 border border-white/20 text-white/70 text-sm"
                     >
                       Message sent successfully! I&apos;ll get back to you soon.
                     </motion.div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 
@@ -8,6 +9,8 @@ const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { scrollToElement } = useSmoothScroll();
+  const pathname = usePathname();
+  const onClassicPage = pathname?.startsWith('/classic');
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 30);
@@ -16,16 +19,21 @@ const Navigation = () => {
   }, []);
 
   const navItems = [
+    { name: 'Play', href: '/', isInternal: false },
     { name: 'About', href: '#about', isInternal: true },
     { name: 'Work', href: '#work', isInternal: true },
     { name: 'Skills', href: '#skills', isInternal: true },
-    { name: 'Blog', href: '/blog', isInternal: false },
-    { name: 'Contact', href: '/contact', isInternal: false },
+    { name: 'Blog', href: '/blog/', isInternal: false },
+    { name: 'Contact', href: '/contact/', isInternal: false },
   ];
 
   const handleNavClick = (href: string, isInternal: boolean) => {
     if (isInternal) {
-      scrollToElement(href);
+      if (onClassicPage) {
+        scrollToElement(href);
+      } else {
+        window.location.href = `/classic/${href}`;
+      }
     } else {
       window.location.href = href;
     }
@@ -45,8 +53,13 @@ const Navigation = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <a
-            href="#"
-            onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            href={onClassicPage ? '#' : '/'}
+            onClick={(e) => {
+              if (onClassicPage) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
             className="text-lg font-bold tracking-tight hover:opacity-80 transition-opacity"
           >
             <span className="gradient-text">V</span>

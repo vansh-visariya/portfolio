@@ -1,47 +1,20 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import Navigation from '@/components/Navigation';
-import { useState, useEffect } from 'react';
-
-interface BlogPost {
-  id: number;
-  title: string;
-  excerpt: string;
-  date: string;
-  readTime: string;
-  tags: string;
-  slug: string;
-}
+import { getAllPosts } from '@/lib/blog';
 
 export default function BlogPage() {
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        const response = await fetch('/api/blogs');
-        if (response.ok) {
-          const data = await response.json();
-          setBlogPosts(data);
-        }
-      } catch (error) {
-        console.error('Error fetching blogs:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchBlogs();
-  }, []);
+  const blogPosts = getAllPosts();
 
   return (
     <div className="min-h-screen text-white relative overflow-hidden">
       {/* Background */}
       <div className="fixed inset-0 grid-bg pointer-events-none" />
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-500/[0.04] blur-[120px]" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[400px] h-[400px] rounded-full bg-cyan-500/[0.03] blur-[100px]" />
+        <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-white/[0.02] blur-[120px]" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[400px] h-[400px] rounded-full bg-white/[0.02] blur-[100px]" />
       </div>
 
       <Navigation />
@@ -72,28 +45,21 @@ export default function BlogPage() {
           </motion.div>
 
           {/* Posts */}
-          {loading ? (
-            <div className="text-center py-20">
-              <div className="w-6 h-6 border-2 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-sm text-white/40">Loading posts...</p>
-            </div>
-          ) : blogPosts.length > 0 ? (
+          {blogPosts.length > 0 ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.15 }}
               className="space-y-4"
             >
-              {blogPosts.map((post, index) => {
-                const tags = typeof post.tags === 'string' ? JSON.parse(post.tags) : post.tags;
-                return (
-                  <motion.article
-                    key={post.id}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.08 }}
-                    className="card p-6 md:p-8 group cursor-pointer"
-                  >
+              {blogPosts.map((post, index) => (
+                <motion.article
+                  key={post.slug}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.08 }}
+                >
+                  <Link href={`/blog/${post.slug}/`} className="card p-6 md:p-8 group cursor-pointer block">
                     <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-3 mb-3">
@@ -101,14 +67,14 @@ export default function BlogPage() {
                           <span className="text-xs text-white/20">·</span>
                           <span className="text-xs text-white/30">{post.readTime}</span>
                         </div>
-                        <h2 className="text-lg font-semibold text-white/90 mb-2 group-hover:text-indigo-300 transition-colors">
+                        <h2 className="text-lg font-semibold text-white/90 mb-2 group-hover:text-white transition-colors">
                           {post.title}
                         </h2>
                         <p className="text-sm text-white/40 leading-relaxed mb-4 line-clamp-2">
                           {post.excerpt}
                         </p>
                         <div className="flex flex-wrap gap-2">
-                          {Array.isArray(tags) && tags.map((tag: string) => (
+                          {post.tags.map((tag) => (
                             <span key={tag} className="tag text-xs">{tag}</span>
                           ))}
                         </div>
@@ -120,9 +86,9 @@ export default function BlogPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 17L17 7M17 7H7M17 7v10" />
                       </svg>
                     </div>
-                  </motion.article>
-                );
-              })}
+                  </Link>
+                </motion.article>
+              ))}
             </motion.div>
           ) : (
             /* Empty state */

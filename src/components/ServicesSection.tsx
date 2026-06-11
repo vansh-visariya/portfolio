@@ -57,10 +57,10 @@ const ServicesSection = () => {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="card p-6 group"
             >
-              <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-xl mb-5 group-hover:bg-indigo-500/10 group-hover:border-indigo-500/20 transition-all duration-300">
+              <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-xl mb-5 group-hover:bg-white/10 group-hover:border-white/20 transition-all duration-300">
                 {service.icon}
               </div>
-              <h3 className="font-semibold text-white/90 mb-2 group-hover:text-indigo-300 transition-colors duration-300">
+              <h3 className="font-semibold text-white/90 mb-2 group-hover:text-white transition-colors duration-300">
                 {service.title}
               </h3>
               <p className="text-sm text-white/40 leading-relaxed">

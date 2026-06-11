@@ -6,7 +6,7 @@ import { Float, Line } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 
-function NeuralNode({ position, size = 0.04, color = "#6366f1", intensity = 0.4 }: {
+function NeuralNode({ position, size = 0.04, color = "#ffffff", intensity = 0.4 }: {
   position: [number, number, number];
   size?: number;
   color?: string;
@@ -44,7 +44,7 @@ function NeuralConnection({ start, end, opacity = 0.15 }: {
   return (
     <Line
       points={[start, end]}
-      color="#6366f1"
+      color="#ffffff"
       lineWidth={0.5}
       transparent
       opacity={opacity}
@@ -118,7 +118,7 @@ function NeuralNetwork({ scrollProgress }: { scrollProgress: number }) {
   return (
     <group ref={groupRef}>
       {connections.map((c, i) => (
-        <NeuralConnection key={i} start={c.start} end={c.end} opacity={0.06 + c.strength * 0.15} />
+        <NeuralConnection key={i} start={c.start} end={c.end} opacity={0.04 + c.strength * 0.12} />
       ))}
       {nodes.map((n, i) => {
         const isCenter = n.layer === 2;
@@ -127,8 +127,8 @@ function NeuralNetwork({ scrollProgress }: { scrollProgress: number }) {
             key={i}
             position={n.position}
             size={isCenter ? 0.06 : 0.035}
-            intensity={0.2 + (n.layer / 4) * 0.3 + scrollProgress * 0.3}
-            color={isCenter ? "#8b5cf6" : "#6366f1"}
+            intensity={0.15 + (n.layer / 4) * 0.25 + scrollProgress * 0.3}
+            color={isCenter ? "#cccccc" : "#ffffff"}
           />
         );
       })}
@@ -137,26 +137,26 @@ function NeuralNetwork({ scrollProgress }: { scrollProgress: number }) {
         <mesh position={[0, 0, 0]}>
           <dodecahedronGeometry args={[0.5, 1]} />
           <meshStandardMaterial
-            color="#6366f1"
-            emissive="#6366f1"
-            emissiveIntensity={0.3 + scrollProgress * 0.5}
+            color="#ffffff"
+            emissive="#ffffff"
+            emissiveIntensity={0.2 + scrollProgress * 0.4}
             metalness={0.9}
             roughness={0.1}
             wireframe
             transparent
-            opacity={0.4}
+            opacity={0.3}
           />
         </mesh>
         <mesh position={[0, 0, 0]}>
           <sphereGeometry args={[0.3, 24, 24]} />
           <meshStandardMaterial
-            color="#8b5cf6"
-            emissive="#8b5cf6"
-            emissiveIntensity={0.2 + scrollProgress * 0.4}
+            color="#ffffff"
+            emissive="#ffffff"
+            emissiveIntensity={0.15 + scrollProgress * 0.35}
             metalness={0.8}
             roughness={0.2}
             transparent
-            opacity={0.5}
+            opacity={0.4}
           />
         </mesh>
       </Float>
@@ -187,7 +187,7 @@ function Particles({ count = 80 }: { count?: number }) {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial size={0.015} color="#6366f1" transparent opacity={0.4} sizeAttenuation />
+      <pointsMaterial size={0.015} color="#ffffff" transparent opacity={0.3} sizeAttenuation />
     </points>
   );
 }
@@ -206,7 +206,7 @@ const Scene3D = () => {
 
   return (
     <div className="fixed inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#050507]/30 to-[#050507]/80" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/30 to-black/80" />
 
       <Canvas
         camera={{ position: [0, 0, 10], fov: 50 }}
@@ -216,9 +216,9 @@ const Scene3D = () => {
         <Suspense fallback={null}>
           <ambientLight intensity={0.15} />
           <directionalLight position={[10, 10, 5]} intensity={0.4} color="#ffffff" />
-          <pointLight position={[-10, -10, -10]} intensity={0.3} color="#6366f1" />
-          <pointLight position={[10, -10, 10]} intensity={0.2} color="#06b6d4" />
-          <fog attach="fog" args={['#050507', 8, 22]} />
+          <pointLight position={[-10, -10, -10]} intensity={0.3} color="#ffffff" />
+          <pointLight position={[10, -10, 10]} intensity={0.2} color="#888888" />
+          <fog attach="fog" args={['#000000', 8, 22]} />
           <NeuralNetwork scrollProgress={scrollProgress} />
           <Particles count={100} />
         </Suspense>
@@ -227,9 +227,8 @@ const Scene3D = () => {
       {/* Progress bar */}
       <div className="absolute top-0 left-0 w-full h-[1px] bg-white/5 z-10">
         <motion.div
-          className="h-full"
+          className="h-full bg-white"
           style={{
-            background: 'linear-gradient(90deg, #6366f1, #06b6d4)',
             width: `${scrollProgress * 100}%`,
           }}
         />

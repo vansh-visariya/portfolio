@@ -53,7 +53,7 @@ const Capabilities = () => {
               <ul className="space-y-3">
                 {g.items.map((item) => (
                   <li key={item} className="flex items-center gap-2.5 text-sm text-white/50">
-                    <div className="w-1 h-1 rounded-full bg-indigo-400/60" />
+                    <div className="w-1 h-1 rounded-full bg-white/60" />
                     {item}
                   </li>
                 ))}

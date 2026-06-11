@@ -27,8 +27,7 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[100] flex items-center justify-center"
-      style={{ background: '#050507' }}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black"
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 1.1 }}
       transition={{ duration: 0.6, ease: 'easeInOut' }}
@@ -40,7 +39,7 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <span className="gradient-text">Vansh</span>
+          <span className="text-white">Vansh</span>
         </motion.div>
 
         <motion.div
@@ -50,9 +49,8 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
           transition={{ duration: 0.4, delay: 0.2 }}
         >
           <motion.div
-            className="h-full rounded-full"
+            className="h-full rounded-full bg-white"
             style={{
-              background: 'linear-gradient(90deg, #6366f1, #8b5cf6, #06b6d4)',
               width: `${progress}%`,
             }}
             transition={{ duration: 0.1 }}

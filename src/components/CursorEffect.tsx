@@ -32,7 +32,7 @@ const CursorEffect = () => {
     <>
       <motion.div
         className="fixed top-0 left-0 w-3 h-3 rounded-full pointer-events-none z-[60] mix-blend-difference"
-        style={{ background: 'rgba(99, 102, 241, 0.8)' }}
+        style={{ background: 'rgba(255, 255, 255, 0.8)' }}
         animate={{
           x: mousePosition.x - 6,
           y: mousePosition.y - 6,
@@ -41,7 +41,7 @@ const CursorEffect = () => {
         transition={{ type: "spring", stiffness: 500, damping: 28 }}
       />
       <motion.div
-        className="fixed top-0 left-0 w-8 h-8 border border-indigo-400/30 rounded-full pointer-events-none z-[59]"
+        className="fixed top-0 left-0 w-8 h-8 border border-white/30 rounded-full pointer-events-none z-[59]"
         animate={{
           x: mousePosition.x - 16,
           y: mousePosition.y - 16,

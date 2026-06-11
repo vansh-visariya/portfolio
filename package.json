@@ -5,19 +5,16 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "seed": "node prisma/seed.js"
+    "start": "next start"
   },
   "dependencies": {
-    "@prisma/client": "^6.18.0",
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.3.0",
     "@types/three": "^0.180.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.22",
     "lucide-react": "^0.544.0",
-    "next": "15.5.4",
-    "prisma": "^6.18.0",
+    "next": "^15.5.19",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "three": "^0.180.0"
