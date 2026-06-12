@@ -1,0 +1,11 @@
+---
+import PaperLayout from '../layouts/PaperLayout.astro';
+
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+---
+
+<sup class="footnote-ref"><a href={'#fn-' + id} id={'fnref-' + id}>{id}</a></sup>

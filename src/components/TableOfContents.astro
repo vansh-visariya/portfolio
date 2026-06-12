@@ -1,0 +1,69 @@
+<nav class="toc-nav" aria-label="Table of Contents">
+  <p class="toc-label">Contents</p>
+  <ul class="toc-list">
+    <li><a href="#section-1" data-toc="section-1">&sect;1. Introduction</a></li>
+    <li><a href="#section-2" data-toc="section-2">&sect;2. Methods</a></li>
+    <li><a href="#section-3" data-toc="section-3">&sect;3. Selected Work</a></li>
+    <li><a href="#section-4" data-toc="section-4">&sect;4. Writing</a></li>
+    <li><a href="#section-5" data-toc="section-5">&sect;5. Acknowledgements</a></li>
+  </ul>
+</nav>
+
+<script>
+  const tocZone = document.querySelector('.toc-zone') as HTMLElement | null;
+  const tocLinks = document.querySelectorAll('[data-toc]');
+
+  function setActive(id: string) {
+    tocLinks.forEach((el) => {
+      if ((el as HTMLElement).dataset.toc === id) {
+        el.classList.add('active');
+      } else {
+        el.classList.remove('active');
+      }
+    });
+  }
+
+  function showToc() {
+    if (tocZone) tocZone.classList.add('visible');
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      let anyVisible = false;
+      for (const entry of entries) {
+        const id = entry.target.getAttribute('id');
+        if (entry.isIntersecting && id) {
+          setActive(id);
+          anyVisible = true;
+        }
+      }
+      if (anyVisible) showToc();
+    },
+    { threshold: 0.15, rootMargin: '-10% 0px' }
+  );
+
+  document.querySelectorAll('[data-section]').forEach((el) => {
+    const section = el as HTMLElement;
+    observer.observe(section);
+
+    const resolveObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          section.setAttribute('data-resolved', '');
+          resolveObserver.unobserve(section);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    resolveObserver.observe(section);
+  });
+
+  if (tocZone) {
+    setTimeout(() => {
+      const rect = tocZone.getBoundingClientRect();
+      if (rect.top >= 0 && rect.bottom <= window.innerHeight) {
+        tocZone.classList.add('visible');
+      }
+    }, 200);
+  }
+</script>

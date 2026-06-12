@@ -1,0 +1,29 @@
+---
+interface Props {
+  href: string;
+  label: string;
+}
+
+const { href, label } = Astro.props;
+---
+
+<a href={href} class="cta">{label} &rarr;</a>
+
+<style>
+  .cta {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--kernel-blue);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1.5px;
+    transition: text-underline-offset 0.15s ease;
+  }
+
+  .cta:hover {
+    text-underline-offset: 6px;
+    color: var(--kernel-blue);
+  }
+</style>

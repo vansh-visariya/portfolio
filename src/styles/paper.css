@@ -1,0 +1,153 @@
+.paper-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+  position: relative;
+}
+
+.paper {
+  max-width: 680px;
+  margin: 0 0 0 0;
+}
+
+.paper p,
+.paper li {
+  text-align: justify;
+  hyphens: auto;
+}
+
+.paper hr {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: 2.5rem 0;
+}
+
+.paper blockquote {
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+  border-left: 2px solid var(--rule);
+  color: var(--ink-light);
+  font-style: italic;
+}
+
+.paper sup a {
+  text-decoration: none;
+  font-size: 0.8em;
+}
+
+.to-zone {
+  position: fixed;
+  top: 2rem;
+  right: max(2rem, calc((100vw - 1100px) / 2 - 200px));
+  width: 180px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  z-index: 10;
+}
+
+.to-zone.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.to-label {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin-bottom: 0.6rem;
+}
+
+.to-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.to-list li {
+  margin-bottom: 0.4rem;
+}
+
+.to-list a {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--ink-light);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.to-list a:hover,
+.to-list a.active {
+  color: var(--ink);
+}
+
+.to-list a.active {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 1100px) {
+  .paper-wrapper {
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .paper {
+    max-width: 100%;
+  }
+
+  .to-zone {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: auto;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .to-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem 1rem;
+  }
+
+  .to-list li {
+    margin-bottom: 0;
+  }
+}
+
+[data-section] {
+  opacity: 0;
+  transform: translateY(14px);
+  filter: blur(2px);
+  transition: opacity 600ms ease-out, transform 600ms ease-out, filter 500ms ease-out;
+}
+
+[data-section][data-resolved] {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+@media print {
+  .to-zone {
+    display: none;
+  }
+
+  [data-section] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .paper p {
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}

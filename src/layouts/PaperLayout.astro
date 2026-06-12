@@ -1,0 +1,38 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  showToC?: boolean;
+}
+
+const { title, description, showToC } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="paper-wrapper">
+      {showToC && <slot name="toc" />}
+      <article class="paper">
+        <slot />
+      </article>
+    </div>
+  </body>
+</html>
+
+<style>
+  @import '../styles/global.css';
+  @import '../styles/paper.css';
+</style>

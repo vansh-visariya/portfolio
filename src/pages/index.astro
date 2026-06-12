@@ -1,0 +1,208 @@
+---
+import PaperLayout from '../layouts/PaperLayout.astro';
+import Header from '../components/Header.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import PaperSection from '../components/PaperSection.astro';
+import LossCurve from '../components/LossCurve.astro';
+import FigureCard from '../components/FigureCard.astro';
+import CTA from '../components/CTA.astro';
+import { getCollection } from 'astro:content';
+
+const projects = await getCollection('projects');
+const sortedProjects = projects.sort((a, b) => a.data.figureNumber - b.data.figureNumber);
+---
+
+<PaperLayout
+  title="Vansh Visariya — Portfolio"
+  description="The research portfolio of Vansh Visariya, AI & ML engineer. Selected projects, methods, and acknowledgements — presented in the form of an academic paper."
+  showToC
+>
+  <div slot="toc" class="toc-zone">
+    <TableOfContents />
+  </div>
+
+  <Header />
+
+  <LossCurve />
+
+  <PaperSection sectionNumber="1" title="Introduction" id="section-1">
+    <p>
+      The author is currently a <strong>Gen AI &amp; Agentic AI Engineering Intern at EY</strong>
+      (May 2026&ndash;Present), collaborating with senior AI consultants and architects to design,
+      deploy, and optimise scalable AI systems. Prior to this, he worked as an
+      <strong>AI Agent Intern at IPAGE UM Services</strong> (Oct 2025&ndash;Jan 2026), where he built
+      intelligent automation agents for email replies and social media workflows using
+      n8n, LLMs, and vector databases — achieving 2&ndash;3&times; faster content creation.
+    </p>
+    <p>
+      The author holds a <strong>GPA of 9.1/10</strong> at SVKM&rsquo;s Dwarkadas J. Sanghvi College
+      of Engineering, Mumbai University, and is expected to graduate in 2027. His work
+      has been recognised as a finalist at Quasar 4.0 (National Level Hackathon, Jan 2026),
+      among the top 10 teams in Megahack 5.0 (out of 250 teams, Mar 2025), and a finalist
+      at the Innovize Hackathon at VJTI, Mumbai (Feb 2025).
+    </p>
+  </PaperSection>
+
+  <PaperSection sectionNumber="2" title="Methods" id="section-2">
+    <p>
+      All experiments are conducted in <strong>Python</strong> with <strong>PyTorch</strong>,
+      <strong>TensorFlow</strong>, and <strong>Keras</strong>. Production deployments use
+      <strong>FastAPI</strong> serving layers and <strong>Docker</strong> containerisation.
+      Vector search workflows leverage <strong>ChromaDB</strong> and <strong>Pinecone</strong>.
+      Agentic pipelines are orchestrated with <strong>LangChain</strong>,
+      <strong>LangGraph</strong>, and <strong>n8n</strong>.
+    </p>
+
+    <div class="methods-grid">
+      <div class="methods-col">
+        <h3>Languages</h3>
+        <div class="tag-cluster">
+          <span class="tag">Python</span><span class="tag">C/C++</span><span class="tag">SQL</span>
+        </div>
+        <h3>Frameworks &amp; Libraries</h3>
+        <div class="tag-cluster">
+          <span class="tag">FastAPI</span><span class="tag">PyTorch</span><span class="tag">TensorFlow</span>
+          <span class="tag">Keras</span><span class="tag">OpenCV</span><span class="tag">LangChain</span>
+          <span class="tag">LangGraph</span><span class="tag">n8n</span>
+        </div>
+      </div>
+      <div class="methods-col">
+        <h3>AI/ML Tools</h3>
+        <div class="tag-cluster">
+          <span class="tag">HuggingFace</span><span class="tag">MLFlow</span><span class="tag">Docker</span>
+          <span class="tag">Airflow</span>
+        </div>
+        <h3>Databases &amp; BI</h3>
+        <div class="tag-cluster">
+          <span class="tag">Supabase</span><span class="tag">MySQL</span><span class="tag">Pinecone</span>
+          <span class="tag">MongoDB</span><span class="tag">PowerBI</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>Certifications</h3>
+    <ul>
+      <li>TensorFlow for Deep Learning Bootcamp &mdash; end-to-end theory, practice, and projects in ML, DL, and NLP.</li>
+      <li>Data Science, Machine Learning &amp; Deep Learning &mdash; full certification with hands-on projects.</li>
+    </ul>
+  </PaperSection>
+
+  <PaperSection sectionNumber="3" title="Selected Work" id="section-3">
+    {
+      sortedProjects.map((project) => (
+        <FigureCard
+          figureNumber={project.data.figureNumber}
+          title={project.data.title}
+          description={project.data.description}
+          tags={project.data.tags}
+          github={project.data.github}
+          annotation={project.data.annotation}
+        />
+      ))
+    }
+  </PaperSection>
+
+  <PaperSection sectionNumber="4" title="Writing" id="section-4">
+    <p>
+      The author maintains a technical blog covering topics in production ML, agentic
+      systems, and the craft of engineering AI.
+    </p>
+
+    <CTA href="/writing" label="Read the work" />
+
+    <p class="writing-note">
+      New writing appears here and at <a href="/writing">/writing</a>. The blog is typeset with the
+      same rigour as the rest of this document — justified text, hyphenation, figure captions,
+      and margin notes where warranted.
+    </p>
+  </PaperSection>
+
+  <PaperSection sectionNumber="5" title="Acknowledgements" id="section-5">
+    <p class="ack-lede">
+      The author would like to thank anyone who read this far. For collaboration,
+      opportunities, or to argue about model architectures — reach out below.
+    </p>
+    <div class="contact-lines">
+      <p>
+        <span class="contact-label">Email:</span>
+        <a href="mailto:vanshvisariya.workdev@gmail.com">vanshvisariya.workdev@gmail.com</a>
+      </p>
+      <p>
+        <span class="contact-label">GitHub:</span>
+        <a href="https://github.com/vansh-visariya" target="_blank" rel="noopener">github.com/vansh-visariya</a>
+      </p>
+      <p>
+        <span class="contact-label">LinkedIn:</span>
+        <a href="https://linkedin.com/in/vanshvisariya" target="_blank" rel="noopener">linkedin.com/in/vanshvisariya</a>
+      </p>
+    </div>
+  </PaperSection>
+</PaperLayout>
+
+<style>
+  .methods-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .methods-col h3 {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+    margin: 1rem 0 0.4rem;
+  }
+
+  .methods-col h3:first-child {
+    margin-top: 0;
+  }
+
+  .tag-cluster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .tag {
+    font-family: var(--font-body);
+    font-size: 0.74rem;
+    color: var(--ink-light);
+    background: var(--rule-light);
+    padding: 0.15rem 0.55rem;
+    border-radius: 2px;
+  }
+
+  .writing-note {
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+    margin-top: 1.2rem;
+  }
+
+  .ack-lede {
+    font-style: italic;
+    color: var(--ink-light);
+  }
+
+  .contact-lines {
+    margin-top: 1.2rem;
+  }
+
+  .contact-lines p {
+    margin-bottom: 0.5rem;
+  }
+
+  .contact-label {
+    font-weight: 500;
+    margin-right: 0.5rem;
+  }
+
+  @media (max-width: 1100px) {
+    .methods-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

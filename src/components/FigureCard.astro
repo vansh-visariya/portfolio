@@ -1,0 +1,119 @@
+---
+interface Props {
+  figureNumber: number;
+  title: string;
+  description: string;
+  tags: string[];
+  github?: string;
+  annotation: string;
+}
+
+const { figureNumber, title, description, tags, github, annotation } = Astro.props;
+---
+
+<figure class="figure-card">
+  <figcaption>
+    <span class="figure-label">Figure {figureNumber}.</span>
+    <strong>{title}</strong> &mdash; {description}
+    <div class="figure-tags">
+      {tags.map((tag) => <span class="tag">{tag}</span>)}
+    </div>
+    {github && <a href={github} class="figure-github" target="_blank" rel="noopener">Repository &nearr;</a>}
+  </figcaption>
+  <aside class="figure-annotation">{annotation}</aside>
+</figure>
+
+<style>
+  .figure-card {
+    position: relative;
+    border-left: 2px solid var(--rule);
+    padding: 0.8rem 1rem;
+    margin: 1.5rem 0;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .figure-card:hover {
+    border-color: var(--ink);
+    background: rgba(0, 0, 0, 0.015);
+  }
+
+  .figure-label {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: var(--ink-light);
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+
+  .figure-card figcaption {
+    font-size: 0.92rem;
+    color: var(--ink);
+    line-height: 1.6;
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  .figure-tags {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    color: var(--ink-light);
+    background: var(--rule-light);
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+  }
+
+  .figure-github {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .figure-annotation {
+    position: absolute;
+    right: -240px;
+    top: 50%;
+    transform: translate(8px, -50%);
+    width: 200px;
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    color: var(--accent);
+    line-height: 1.4;
+    font-style: italic;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+  }
+
+  .figure-card:hover .figure-annotation {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+
+  @media (max-width: 1100px) {
+    .figure-annotation {
+      position: static;
+      right: auto;
+      top: auto;
+      width: auto;
+      transform: none;
+      opacity: 0.7;
+      margin-top: 0.4rem;
+      padding-left: 0.5rem;
+      border-left: 1px solid var(--accent);
+    }
+
+    .figure-card:hover .figure-annotation {
+      transform: none;
+      opacity: 1;
+    }
+  }
+</style>

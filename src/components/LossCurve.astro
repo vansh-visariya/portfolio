@@ -1,0 +1,175 @@
+<figure class="loss-curve-figure">
+  <canvas id="loss-curve" aria-label="Training loss curve converging to minimum" width="1300" height="400"></canvas>
+  <figcaption>Figure 0. Training convergence of the author&rsquo;s practice over time &mdash; loss decreases
+    monotonically with minor oscillations, finding its minimum in recent epochs.</figcaption>
+</figure>
+
+<script>
+  function drawLossCurve() {
+    const canvas = document.getElementById('loss-curve') as HTMLCanvasElement | null;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+
+    const W = rect.width;
+    const H = rect.height;
+    const margin = { top: 40, right: 60, bottom: 36, left: 56 };
+    const pw = W - margin.left - margin.right;
+    const ph = H - margin.top - margin.bottom;
+
+    const n = 240;
+    const points: { x: number; y: number }[] = [];
+
+    for (let i = 0; i < n; i++) {
+      const t = i / (n - 1);
+      const base = 2.4 * Math.exp(-t * 3.2) + 0.2;
+      const freq1 = Math.sin(t * 14) * 0.08 * (1 - t);
+      const freq2 = Math.sin(t * 37) * 0.05 * (1 - t) * (1 - t);
+      const freq3 = (Math.random() - 0.5) * 0.04 * (1 - t);
+      const y = base + freq1 + freq2 + freq3;
+      points.push({ x: t, y: Math.max(0.05, y) });
+    }
+
+    const yMax = 2.6;
+    const toX = (t: number) => margin.left + t * pw;
+    const toY = (v: number) => margin.top + ph * (1 - v / yMax);
+
+    function drawGrid() {
+      ctx.strokeStyle = '#e8e8e4';
+      ctx.lineWidth = 0.5;
+      for (let i = 1; i <= 5; i++) {
+        const y = margin.top + (ph * i) / 6;
+        ctx.beginPath();
+        ctx.moveTo(margin.left, y);
+        ctx.lineTo(margin.left + pw, y);
+        ctx.stroke();
+      }
+      for (let i = 0; i <= 10; i++) {
+        const x = margin.left + (pw * i) / 10;
+        ctx.beginPath();
+        ctx.moveTo(x, margin.top);
+        ctx.lineTo(x, margin.top + ph);
+        ctx.stroke();
+      }
+    }
+
+    function drawAxes() {
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(margin.left, margin.top);
+      ctx.lineTo(margin.left, margin.top + ph);
+      ctx.lineTo(margin.left + pw, margin.top + ph);
+      ctx.stroke();
+
+      ctx.fillStyle = '#999';
+      ctx.font = '11px "IBM Plex Mono", monospace';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      for (let i = 0; i <= 5; i++) {
+        const v = (yMax * (6 - i)) / 6;
+        const y = margin.top + (ph * i) / 6;
+        ctx.fillText(v.toFixed(1), margin.left - 8, y);
+      }
+
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText('Epochs', margin.left + pw / 2, margin.top + ph + 12);
+      ctx.fillText('Loss', 14, margin.top + ph / 2);
+    }
+
+    function drawCurve(fraction: number) {
+      const count = Math.max(2, Math.floor(fraction * points.length));
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 1.2;
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(toX(points[0].x), toY(points[0].y));
+      for (let i = 1; i < count; i++) {
+        ctx.lineTo(toX(points[i].x), toY(points[i].y));
+      }
+      ctx.stroke();
+    }
+
+    function drawMinMarker() {
+      const last = points[points.length - 1];
+      const x = toX(last.x);
+      const y = toY(last.y);
+
+      ctx.fillStyle = '#002FA7';
+      ctx.beginPath();
+      ctx.arc(x, y, 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#1a1a1a';
+      ctx.font = '11px "IBM Plex Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'bottom';
+      ctx.fillText(last.y.toFixed(3), x + 8, y - 4);
+    }
+
+    const startTime = performance.now();
+    const duration = 3200;
+
+    function frame(now: number) {
+      const elapsed = now - startTime;
+      const fraction = Math.min(1, elapsed / duration);
+      const eased = 1 - Math.pow(1 - fraction, 2);
+
+      ctx.clearRect(0, 0, W, H);
+      drawGrid();
+      drawAxes();
+      drawCurve(eased);
+
+      if (fraction >= 1) {
+        drawMinMarker();
+        return;
+      }
+
+      requestAnimationFrame(frame);
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  if (typeof window !== 'undefined') {
+    document.addEventListener('astro:page-load', drawLossCurve);
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      setTimeout(drawLossCurve, 50);
+    }
+  }
+</script>
+
+<style>
+  .loss-curve-figure {
+    margin: 1.5rem 0 2.5rem;
+  }
+
+  .loss-curve-figure canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .loss-curve-figure figcaption {
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    color: var(--ink-light);
+    line-height: 1.5;
+    margin-top: 0.6rem;
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  @media print {
+    .loss-curve-figure canvas {
+      border: 1px solid var(--rule);
+    }
+  }
+</style>
