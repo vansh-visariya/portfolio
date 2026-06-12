@@ -5,11 +5,39 @@
 </figure>
 
 <script>
+  function hexToRgb(hex: string): [number, number, number] {
+    const h = hex.replace('#', '');
+    return [
+      parseInt(h.substring(0, 2), 16),
+      parseInt(h.substring(2, 4), 16),
+      parseInt(h.substring(4, 6), 16),
+    ];
+  }
+
+  function rgba(hex: string, alpha: number): string {
+    const [r, g, b] = hexToRgb(hex);
+    return `rgba(${r},${g},${b},${alpha})`;
+  }
+
+  function getCSSVar(name: string): string {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  let animFrameId = 0;
+
   function drawLossCurve() {
     const canvas = document.getElementById('loss-curve') as HTMLCanvasElement | null;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    cancelAnimationFrame(animFrameId);
+
+    const ink = getCSSVar('--ink');
+    const inkMuted = getCSSVar('--ink-muted');
+    const accent = getCSSVar('--accent');
+    const gridColor = getCSSVar('--grid');
+    const bg = getCSSVar('--paper-bg');
 
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
@@ -40,8 +68,13 @@
     const toX = (t: number) => margin.left + t * pw;
     const toY = (v: number) => margin.top + ph * (1 - v / yMax);
 
+    function drawBackground() {
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, H);
+    }
+
     function drawGrid() {
-      ctx.strokeStyle = '#e8e8e4';
+      ctx.strokeStyle = gridColor;
       ctx.lineWidth = 0.5;
       for (let i = 1; i <= 5; i++) {
         const y = margin.top + (ph * i) / 6;
@@ -60,7 +93,7 @@
     }
 
     function drawAxes() {
-      ctx.strokeStyle = '#1a1a1a';
+      ctx.strokeStyle = ink;
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(margin.left, margin.top);
@@ -68,7 +101,7 @@
       ctx.lineTo(margin.left + pw, margin.top + ph);
       ctx.stroke();
 
-      ctx.fillStyle = '#999';
+      ctx.fillStyle = inkMuted;
       ctx.font = '11px "IBM Plex Mono", monospace';
       ctx.textAlign = 'right';
       ctx.textBaseline = 'middle';
@@ -86,7 +119,7 @@
 
     function drawCurve(fraction: number) {
       const count = Math.max(2, Math.floor(fraction * points.length));
-      ctx.strokeStyle = '#1a1a1a';
+      ctx.strokeStyle = ink;
       ctx.lineWidth = 1.2;
       ctx.lineJoin = 'round';
       ctx.beginPath();
@@ -102,12 +135,12 @@
       const x = toX(last.x);
       const y = toY(last.y);
 
-      ctx.fillStyle = '#002FA7';
+      ctx.fillStyle = accent;
       ctx.beginPath();
       ctx.arc(x, y, 3, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.fillStyle = '#1a1a1a';
+      ctx.fillStyle = ink;
       ctx.font = '11px "IBM Plex Mono", monospace';
       ctx.textAlign = 'left';
       ctx.textBaseline = 'bottom';
@@ -123,6 +156,7 @@
       const eased = 1 - Math.pow(1 - fraction, 2);
 
       ctx.clearRect(0, 0, W, H);
+      drawBackground();
       drawGrid();
       drawAxes();
       drawCurve(eased);
@@ -132,7 +166,7 @@
         return;
       }
 
-      requestAnimationFrame(frame);
+      animFrameId = requestAnimationFrame(frame);
     }
 
     requestAnimationFrame(frame);
@@ -140,6 +174,13 @@
 
   if (typeof window !== 'undefined') {
     document.addEventListener('astro:page-load', drawLossCurve);
+    const observer = new MutationObserver(() => {
+      drawLossCurve();
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
       setTimeout(drawLossCurve, 50);
     }

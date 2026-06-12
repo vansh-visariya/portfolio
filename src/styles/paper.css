@@ -7,7 +7,7 @@
 
 .paper {
   max-width: 680px;
-  margin: 0 0 0 0;
+  margin: 0 auto;
 }
 
 .paper p,
@@ -20,6 +20,7 @@
   border: none;
   border-top: 1px solid var(--rule);
   margin: 2.5rem 0;
+  transition: border-color 0.3s ease;
 }
 
 .paper blockquote {
@@ -28,6 +29,7 @@
   border-left: 2px solid var(--rule);
   color: var(--ink-light);
   font-style: italic;
+  transition: border-color 0.3s ease;
 }
 
 .paper sup a {
@@ -35,7 +37,7 @@
   font-size: 0.8em;
 }
 
-.to-zone {
+.toc-zone {
   position: fixed;
   top: 2rem;
   right: max(2rem, calc((100vw - 1100px) / 2 - 200px));
@@ -46,12 +48,12 @@
   z-index: 10;
 }
 
-.to-zone.visible {
+.toc-zone.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-.to-label {
+.toc-label {
   font-family: var(--font-body);
   font-size: 0.65rem;
   text-transform: uppercase;
@@ -60,17 +62,17 @@
   margin-bottom: 0.6rem;
 }
 
-.to-list {
+.toc-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.to-list li {
+.toc-list li {
   margin-bottom: 0.4rem;
 }
 
-.to-list a {
+.toc-list a {
   font-family: var(--font-body);
   font-size: 0.78rem;
   color: var(--ink-light);
@@ -78,12 +80,12 @@
   transition: color 0.15s ease;
 }
 
-.to-list a:hover,
-.to-list a.active {
+.toc-list a:hover,
+.toc-list a.active {
   color: var(--ink);
 }
 
-.to-list a.active {
+.toc-list a.active {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -97,7 +99,7 @@
     max-width: 100%;
   }
 
-  .to-zone {
+  .toc-zone {
     position: relative;
     top: auto;
     right: auto;
@@ -107,13 +109,13 @@
     border-bottom: 1px solid var(--rule);
   }
 
-  .to-list {
+  .toc-list {
     display: flex;
     flex-wrap: wrap;
     gap: 0.2rem 1rem;
   }
 
-  .to-list li {
+  .toc-list li {
     margin-bottom: 0;
   }
 }
@@ -132,7 +134,8 @@
 }
 
 @media print {
-  .to-zone {
+  .toc-zone,
+  .theme-toggle {
     display: none;
   }
 
@@ -149,5 +152,10 @@
 
   a {
     text-decoration: none;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
   }
 }
